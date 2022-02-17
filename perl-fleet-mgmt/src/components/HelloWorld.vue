@@ -61,6 +61,8 @@
             :href="link.href"
             class="subheading mx-3"
             target="_blank"
+            v-tippy
+            :content="link.content"
           >
             {{ link.text }}
           </a>
@@ -107,17 +109,20 @@ export default {
       },
       {
         text: 'awesome-vuetify',
-        href: 'https://github.com/vuetifyjs/awesome-vuetify'
+        href: 'https://github.com/vuetifyjs/awesome-vuetify',
+        content: 'Juop'
       }
     ],
     importantLinks: [
       {
         text: 'Documentation',
-        href: 'https://vuetifyjs.com'
+        href: 'https://vuetifyjs.com',
+        content: 'Hello'
       },
       {
         text: 'Chat',
-        href: 'https://community.vuetifyjs.com'
+        href: 'https://community.vuetifyjs.com',
+        content: 'Hi'
       },
       {
         text: 'Made with Vuetify',
@@ -125,7 +130,8 @@ export default {
       },
       {
         text: 'Twitter',
-        href: 'https://twitter.com/vuetifyjs'
+        href: 'https://twitter.com/vuetifyjs',
+        content: 'lowe'
       },
       {
         text: 'Articles',
