@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <v-row align="center" justify="center" class="mt-md-4 mt-lg-8">
+      <v-row align="center" justify="center" class="mt-md-4 mt-sm-4 mt-lg-8">
         <v-col cols="12" md="3" align-self="center">
           <slot name='header'>
           </slot>

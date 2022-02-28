@@ -5,7 +5,7 @@ import config from '../../public/config'
 export default () => {
   const authToken = Cookies.get('authToken')
   return axios.create({
-    baseURL: config.api,
+    baseURL: config.Api,
     withCredentials: false,
     headers: {
       Accept: 'Application/json',

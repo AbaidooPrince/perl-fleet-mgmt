@@ -17,6 +17,7 @@
             <h2 class="font-weight-bold">Login to Fleetgh</h2>
           </v-card-title>
           <v-card-text>
+            <v-form ref="login_form" >
             <!-- email or user name -->
             <div>
               <label>Email address or username</label>
@@ -24,6 +25,7 @@
               v-model="loginForm.email"
               dense
               outlined
+              :rules="[required('Email'), validEmail()]"
               >
               </v-text-field>
             </div>
@@ -39,15 +41,18 @@
               :type="showPassword ? 'text' : 'password'"
               dense
               outlined
+              :rules="[required('Password'), minLength('Password', 4)]"
               >
               </v-text-field>
             </div>
             <div class="text-right mt-n2">
               <router-link class="my-link" to="/forgot-password">Forgot password?</router-link>
             </div>
+            </v-form>
           </v-card-text>
           <v-card-actions class="mb-3">
             <v-btn
+            @click="login"
             block
             color="success"
             depressed
@@ -61,7 +66,9 @@
 </template>
 
 <script>
+import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
+import user from '../../mixins/user'
 export default {
   name: 'Login',
   components: { AuthLayout },
@@ -69,11 +76,33 @@ export default {
     return {
       processing: false,
       showPassword: false,
+      loginValid: false,
+      ...validation,
       // eslint-disable-next-line no-undef
       loginForm: new Form({
         email: '',
         password: ''
       })
+    }
+  },
+  mixins: ['user'],
+  methods: {
+    async login () {
+      if (!this.$refs.login_form.validate()) return
+      this.processing = true
+      const response = await this.$store.dispatch('authentication/logUserIn', this.loginForm)
+      console.log('response', response)
+      if (response === 'success') {
+        this.processing = false
+        this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
+      } else if (response === 'error') {
+        this.$store.dispatch('showSnackBar', { error: true, message: 'Error Loging you in!' })
+        this.processing = false
+        console.log('error', response)
+      } else {
+        this.$store.dispatch('showSnackBar', { error: true, message: 'Error Loging you in!' })
+        this.processing = false
+      }
     }
   }
 
