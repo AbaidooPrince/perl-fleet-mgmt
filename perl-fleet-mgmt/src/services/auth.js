@@ -24,15 +24,15 @@ export function isAdmin () {
 // owner
 export function isRegular () {
   if (isLoggedIn()) {
-    const role = store.state.authentication.userType.name
-    return role === 'regular'
+    const role = store.state.authentication.userRole
+    return role === 'regularUser'
   } else return false
 }
 // teller
-export function isTeller () {
+export function isNonUser () {
   if (isLoggedIn()) {
     const role = store.state.authentication.userRole
-    return role === 'Restaurant-Teller'
+    return role === 'nonUser'
   } else return false
 }
 // Account

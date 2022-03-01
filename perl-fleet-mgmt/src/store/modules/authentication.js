@@ -27,6 +27,15 @@ export default {
     }
   },
   actions: {
+    async verifyUser () {
+      try {
+        const response = await Api().post('/check-email-code')
+        if (response.data.message) {
+          return true
+        }
+      } catch (e) {
+      }
+    },
     async logUserIn ({ commit }, data) {
       try {
         const response = await Api().post('/login', data)

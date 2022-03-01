@@ -22,7 +22,7 @@
             <div>
               <label>Email address or username</label>
               <v-text-field
-              v-model="loginForm.email"
+              v-model="loginForm.username"
               dense
               outlined
               :rules="[required('Email'), validEmail()]"
@@ -80,7 +80,7 @@ export default {
       ...validation,
       // eslint-disable-next-line no-undef
       loginForm: new Form({
-        email: '',
+        username: '',
         password: ''
       })
     }

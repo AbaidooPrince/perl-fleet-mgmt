@@ -1,4 +1,5 @@
 import store from '../store/index'
+import { isAdmin, isRegular, isNonUser } from '../services/auth'
 export default {
   computed: {
     currentUser: {
@@ -14,6 +15,21 @@ export default {
     userRouteID: {
       get () {
         return store.state.authentication.userRouteID
+      }
+    },
+    isNonUser: {
+      get () {
+        return isNonUser()
+      }
+    },
+    isRegular: {
+      get () {
+        return isRegular()
+      }
+    },
+    isAdmin: {
+      get () {
+        return isAdmin()
       }
     },
     userID: {

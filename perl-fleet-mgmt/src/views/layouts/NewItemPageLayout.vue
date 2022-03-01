@@ -17,10 +17,12 @@
       <v-spacer></v-spacer>
       <div class="d-flex justify-space-around">
         <div class="px-3">
-          <v-btn plain small color="primary">Cancel</v-btn>
+          <v-btn @click="cancelAction" plain small color="primary">Cancel</v-btn>
         </div>
         <div class="px-3">
           <v-btn depressed small
+          :disabled="processing"
+          @click="addAction"
           color="primary"
           >Save {{ listPage ? listPage : 'Item'}}</v-btn>
         </div>
@@ -30,13 +32,25 @@
     <div class="mt-4">
     <slot name="formView"/>
     </div>
+    <div>
+      <slot name="actions">
+      </slot>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'NewItemPageLayout',
-  props: ['listPage', 'listLink', 'title']
+  props: ['listPage', 'listLink', 'title', 'processing'],
+  methods: {
+    cancelAction () {
+      this.$emit('cancel-action')
+    },
+    addAction () {
+      this.$emit('add-action')
+    }
+  }
 }
 </script>
 

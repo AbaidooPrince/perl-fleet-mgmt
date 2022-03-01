@@ -5,7 +5,7 @@
       <v-spacer>
       </v-spacer>
       <div class="">
-      <v-btn :to="{name: 'AdminHome'}" color="primary" class="mx-2" outlined small>
+      <v-btn v-if="computed.isAdmin" :to="{name: 'AdminHome'}" color="primary" class="mx-2" outlined small>
         Manage
       </v-btn>
       <v-btn class="mx-2" small icon outlined>
@@ -266,14 +266,17 @@
 </template>
 
 <script>
+import user from '../../mixins/user'
 export default {
   name: 'RegularUserLayout',
   data () {
     return {
       mini: true,
-      drawer: true
+      drawer: true,
+      ...user
     }
   },
+  mixins: ['user'],
   computed: {
     activateDrawer () {
       return this.$vuetify.breakpoint.width < '1000'
