@@ -10,5 +10,17 @@ export default [
     meta: {
       layout: 'admin'
     }
+  },
+  {
+    path: '/:userRouteID/admin/profile',
+    name: 'AdminProfile',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/UserProfile.vue'),
+    meta: {
+      layout: 'admin'
+    }
   }
 ]

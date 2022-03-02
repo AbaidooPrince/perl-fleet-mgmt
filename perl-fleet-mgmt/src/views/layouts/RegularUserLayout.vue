@@ -27,7 +27,14 @@
         <!-- <v-toolbar-title>
           MegaMinds Inc
         </v-toolbar-title> -->
-        <div>
+    <v-menu
+      bottom
+      transition="slide-y-transition"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <div
+          v-bind="attrs"
+          v-on="on">
           <div>
             <label class="mb-0 font-weight-bold">MegaMinds Inc</label>
             <span>
@@ -38,6 +45,44 @@
             Prince Abaidoo
           </label>
         </div>
+      </template>
+      <v-list dense width="200">
+        <v-list-item :to="{name: 'AdminHome'}">
+          <v-row align="center" justify="center" class="text-center pb-4 pt-4">
+            <v-col cols="12">
+            <v-avatar size="100" rounded="sm" color="grey lighten-3">
+              <div>
+                <v-icon >mdi-image-size-select-large</v-icon>
+              <div>
+                <v-btn x-small plain>Add Logo</v-btn>
+              </div>
+              </div>
+            </v-avatar>
+            </v-col>
+            <v-col cols="12" class="pt-0">
+              <label>MegaMinds Inc.</label>
+            </v-col>
+          </v-row>
+        </v-list-item>
+        <v-list-item
+        exact-path
+        :to="{name: `${item.routeName}`}"
+          v-for="(item, index) in adminLinks"
+          :key="index"
+        >
+          <v-list-item-title>{{ item.name }}</v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-2"></v-divider>
+        <v-list-item
+        exact-path
+        :to="{name: `${item.routeName}`}"
+          v-for="(item, index) in userLinks"
+          :key="index"
+        >
+          <v-list-item-title>{{ item.name }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
         <v-spacer>
         </v-spacer>
         <v-avatar
@@ -273,6 +318,25 @@ export default {
     return {
       mini: true,
       drawer: true,
+      adminLinks: [
+        {
+          id: 1, name: 'Account Settings', routeName: 'AdminHome'
+        },
+        {
+          id: 2, name: 'User Management', routeName: 'UsersList'
+        }
+      ],
+      userLinks: [
+        {
+          id: 1, name: 'User Profile', routeName: 'UserProfile'
+        },
+        {
+          id: 2, name: 'Change Password', routeName: 'PasswordChange'
+        },
+        {
+          id: 3, name: 'Logout', routeName: 'Logout'
+        }
+      ],
       ...user
     }
   },

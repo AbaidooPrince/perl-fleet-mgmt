@@ -33,7 +33,7 @@
       <!-- logged in user  -->
 
       <!-- User Profile  -->
-            <v-list-item link>
+            <v-list-item active-class="primary lighten-5" link :to="{name: 'AdminProfile'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -44,7 +44,7 @@
             </v-list-item>
 
             <!-- user management  -->
-            <v-list-item exact-path link :to="{name: 'UsersList'}">
+            <v-list-item exact-path target="_blank" link :to="{name: 'UsersList'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
