@@ -44,7 +44,7 @@
             </v-list-item>
 
             <!-- user management  -->
-            <v-list-item link>
+            <v-list-item exact-path link :to="{name: 'UsersList'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>

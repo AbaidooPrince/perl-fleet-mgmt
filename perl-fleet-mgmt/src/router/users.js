@@ -36,6 +36,42 @@ export default [
     }
   },
   {
+    path: '/:userRouteID/personnel/users',
+    name: 'UsersList',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
+    meta: {
+      layout: 'user'
+    }
+  },
+  {
+    path: '/:userRouteID/personnel/non-access',
+    name: 'NonAccessList',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
+    meta: {
+      layout: 'user'
+    }
+  },
+  {
+    path: '/:userRouteID/personnel/archived',
+    name: 'ArchivedUsersList',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
+    meta: {
+      layout: 'user'
+    }
+  },
+  {
     path: '/:userRouteID/personnel/new',
     name: 'NewPersonnel',
     props: true,

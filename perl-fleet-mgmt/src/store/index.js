@@ -13,7 +13,17 @@ export default new Vuex.Store({
   state: {
     snackbar: false,
     snackBarText: '',
-    error: false
+    error: false,
+    userType: [
+      { id: 1, name: 'Administrator' },
+      { id: 2, name: 'Regular User' },
+      { id: 3, name: 'Non Access User' }
+    ],
+    userStatus: [
+      { id: 1, name: 'Active', color: 'success' },
+      { id: 2, name: 'Deactivated', color: 'error lighten-2' },
+      { id: 3, name: 'No Access', color: 'grey' }
+    ]
   },
   mutations: {
     SET_SNACKBAR_ON (state) {
