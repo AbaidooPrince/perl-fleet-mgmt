@@ -67,7 +67,7 @@
       <v-dialog v-model="formDialog"
       width="400"
       >
-        <group-form :form="groupForm" ref="group_form">
+        <group-form :editMode="editMode" :form="groupForm" ref="group_form">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
               <v-icon>mdi-close</v-icon>
@@ -101,6 +101,7 @@ export default {
   components: { AdminSingleCRUDPageLayout, CustomPagination, GroupForm },
   data () {
     return {
+      editMode: false,
       ...validation,
       formDialog: false,
       // eslint-disable-next-line no-undef

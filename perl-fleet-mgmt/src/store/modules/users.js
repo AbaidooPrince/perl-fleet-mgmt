@@ -23,11 +23,24 @@ export default {
     }
   },
   actions: {
+    async updateGroup ({ dispatch }, data) {
+      try {
+        const response = await Api().put(`/users/group/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllGroups')
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return 'error'
+      }
+    },
     // /users/group
-    async addGroup ({ commit }, data) {
+    async addGroup ({ dispatch }, data) {
       try {
         const response = await Api().post('/users/group', data)
         if (response.data.message === 'success') {
+          dispatch('getAllGroups')
           return 'success'
         }
       } catch (e) {
@@ -86,7 +99,7 @@ export default {
     },
     async updateUser ({ commit }, user) {
       try {
-        const response = await Api().post(`/users/user/${user.id}`, user)
+        const response = await Api().put(`/users/user/${user.id}`, user)
         if (response.data.message === 'success') {
           commit('SET_USER', response.data.user)
           return 'success'

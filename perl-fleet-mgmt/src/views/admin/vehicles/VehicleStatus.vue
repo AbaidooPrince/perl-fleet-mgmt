@@ -36,7 +36,7 @@
       </v-container>
     </template>
     <template v-slot:[`item.name`]="{ item }" >
-              <v-badge left dot inline :color="item.color"></v-badge>
+              <v-badge left dot inline :color="item.color ? item.color : 'primary'"></v-badge>
               {{ item.name }}
     </template>
     <template class="table-actions" v-slot:[`item.id`]="{ item }">
@@ -52,7 +52,7 @@
         </v-btn>
       </template>
         <v-list dense>
-          <v-list-item v-for="menu in actionItems" :key="menu.id" @click="action(item)">
+          <v-list-item v-for="menu in actionItems" :key="menu.id" @click="action(item, menu.name)">
             <v-list-item-title class="small">
               <v-icon  left small>{{ menu.icon }}</v-icon>
                 {{ menu.name }}
@@ -71,7 +71,7 @@
       <v-dialog v-model="formDialog"
       width="600"
       >
-      <vehicle-status-form :form="vehicleStatusForm" ref="group_form">
+      <vehicle-status-form :editMode="editMode" :form="vehicleStatusForm">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
               <v-icon>mdi-close</v-icon>
@@ -84,7 +84,7 @@
               </v-btn>
               </div>
               <div class="">
-              <v-btn @click="addVehicleStatus" color="primary" depressed>Save
+              <v-btn @click="saveOption" color="primary" depressed>Save
               </v-btn>
               </div>
             </div>
@@ -97,14 +97,17 @@
 <script>
 import VehicleStatusForm from '../../../components/adminForms/VehicleStatusForm.vue'
 import CustomPagination from '../../../components/common/CustomPagination.vue'
+import common from '../../../mixins/common'
 import validation from '../../../services/validation'
 import AdminSingleCRUDPageLayout from '../../layouts/AdminSingleCRUDPageLayout.vue'
 
 export default {
   name: 'VehicleStatus',
   components: { AdminSingleCRUDPageLayout, CustomPagination, VehicleStatusForm },
+  mixins: [common],
   data () {
     return {
+      editMode: false,
       ...validation,
       formDialog: false,
       // eslint-disable-next-line no-undef
@@ -141,9 +144,11 @@ export default {
       if (action === 'Edit') {
         const data = {
           ...item,
-          groupName: item.name
+          statusName: item.name
         }
-        this.groupForm.fill(data)
+        console.log('item', item)
+        this.editMode = true
+        this.vehicleStatusForm.fill(data)
         this.formDialog = true
       } else {
         this.deleteItem = item
@@ -157,12 +162,34 @@ export default {
       this.vehicleStatusForm.reset()
       this.formDialog = true
     },
+    saveOption () {
+      if (this.editMode) {
+        this.updateVehicleStatus()
+      } else {
+        this.addVehicleStatus()
+      }
+    },
+    async updateVehicleStatus () {
+      try {
+        const response = await this.$store.dispatch('vehicles/updateVehicleStatus', this.vehicleStatusForm)
+        if (response === 'success') {
+          this.$store.dispatch('showSnackBar', { message: 'Status updated successfully!', error: false })
+          this.formDialog = false
+        //   this.$store.dispatch('vehicles/getAllVehicleStatus')
+        } else if (response.error) {
+          this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
+        }
+      } catch (e) {
+
+      }
+    },
     async addVehicleStatus () {
       try {
         const response = await this.$store.dispatch('vehicles/addVehicleStatus', this.vehicleStatusForm)
         if (response === 'success') {
           this.$store.dispatch('showSnackBar', { message: 'Status added successfully!', error: false })
           this.formDialog = false
+        //   this.$store.dispatch('vehicles/getAllVehicleStatus')
         } else if (response.error) {
           this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
         }
@@ -185,7 +212,7 @@ export default {
   computed: {
     allVehicleStatus: {
       get () {
-        return this.$store.state.vehicles.allVehicleStatus
+        return this.$store.state.vehicles.allStatus
       }
     }
   },

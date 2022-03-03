@@ -72,6 +72,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.commit('SET_SNACKBAR_OFF')
     this.renderLayout()
   }
 }

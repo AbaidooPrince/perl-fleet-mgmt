@@ -35,7 +35,7 @@
 import validation from '../../services/validation'
 export default {
   name: 'GroupForm',
-  props: ['form'],
+  props: ['form', 'editMode'],
   data () {
     return {
       ...validation

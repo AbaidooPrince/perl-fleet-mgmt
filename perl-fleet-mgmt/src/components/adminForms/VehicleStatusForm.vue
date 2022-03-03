@@ -11,6 +11,7 @@
             </v-card-title>
             <v-divider class="mt-0"></v-divider>
             <v-card-text>
+              <v-form ref="group_form">
               <div>
                 <label>Vehicle Status <strong>*</strong></label>
                 <v-text-field :rules="[required('Status Name')]" dense outlined
@@ -33,6 +34,7 @@
                   </v-radio>
                 </v-radio-group>
               </div>
+              </v-form>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -50,7 +52,7 @@ import validation from '../../services/validation'
 import common from '../../mixins/common'
 export default {
   name: 'VehicleStatusForm',
-  props: ['form'],
+  props: ['form', 'editMode'],
   mixins: [common],
   data () {
     return {

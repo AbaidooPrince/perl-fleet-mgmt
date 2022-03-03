@@ -19,15 +19,16 @@ export default {
       state.user = data
     },
     SET_ALL_VEHICLE_STATUS (state, data) {
-      state.allVehicleStatus = data
+      state.allStatus = data
     }
   },
   actions: {
     // /users/group
-    async addVehicleStatus ({ commit }, data) {
+    async addVehicleStatus ({ dispatch }, data) {
       try {
         const response = await Api().post('/vehicles/status', data)
         if (response.data.message === 'success') {
+          dispatch('getAllVehicleStatus')
           return 'success'
         }
       } catch (e) {
@@ -35,11 +36,23 @@ export default {
         return e.response.data
       }
     },
+    async updateVehicleStatus ({ dispatch }, data) {
+      try {
+        const response = await Api().put(`/vehicles/status/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllVehicleStatus')
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return 'error'
+      }
+    },
     async getAllVehicleStatus ({ commit }) {
       try {
         const response = await Api().get('/vehicles/statuses')
         if (response.data.message === 'success') {
-          commit('SET_ALL_VEHICLE_STATUS', response.data.groups)
+          commit('SET_ALL_VEHICLE_STATUS', response.data.status)
           return 'success'
         }
       } catch (e) {
