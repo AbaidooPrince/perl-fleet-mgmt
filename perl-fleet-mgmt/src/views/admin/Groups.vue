@@ -67,7 +67,8 @@
       <v-dialog v-model="formDialog"
       width="400"
       >
-        <group-form :editMode="editMode" :form="groupForm" ref="group_form">
+      <v-form ref="group_form">
+        <group-form :editMode="editMode" :form="groupForm">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
               <v-icon>mdi-close</v-icon>
@@ -80,12 +81,13 @@
               </v-btn>
               </div>
               <div class="">
-              <v-btn @click="addGroup" color="primary" depressed>Save
+              <v-btn @click="saveOption" color="primary" depressed>Save
               </v-btn>
               </div>
             </div>
           </template>
         </group-form>
+      </v-form>
       </v-dialog>
   </div>
 </template>
@@ -132,8 +134,17 @@ export default {
     }
   },
   methods: {
+    saveOption () {
+      if (!this.$refs.group_form.validate()) return
+      if (this.editMode) {
+        this.updateGroup()
+      } else {
+        this.addGroup()
+      }
+    },
     action (item, action) {
       if (action === 'Edit') {
+        this.editMode = true
         const data = {
           ...item,
           groupName: item.name
@@ -146,11 +157,23 @@ export default {
       }
     },
     closeDialog () {
+      this.$refs.group_form.reset()
       this.formDialog = false
     },
     openForm () {
       this.groupForm.reset()
       this.formDialog = true
+    },
+    async updateGroup () {
+      try {
+        const response = await this.$store.dispatch('users/updateGroup', this.groupForm)
+        if (response === 'success') {
+          this.$store.dispatch('showSnackBar', { message: 'Group updated successfully!', error: false })
+          this.formDialog = false
+        }
+      } catch (e) {
+
+      }
     },
     async addGroup () {
       try {

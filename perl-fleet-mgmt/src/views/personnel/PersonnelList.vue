@@ -208,6 +208,9 @@ export default {
       } else if (response.error) {
         this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
         this.loading = false
+      } else {
+        this.$store.dispatch('showSnackBar', { message: 'Error fetching data', error: true })
+        this.loading = false
       }
     }
   },

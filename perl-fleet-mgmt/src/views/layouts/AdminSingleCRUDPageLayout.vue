@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <v-row justify="center" align="center" class="mt-4">
+      <v-row justify="center" align="center" class="mt-md-4">
         <v-col cols="12" md="4">
           <h3 class="mb-0 font-weight-bold">{{ title ? title : '' }}</h3>
         </v-col>

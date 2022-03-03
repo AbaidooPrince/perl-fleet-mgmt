@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-toolbar class="transparent hidden-md-and-up" flat>
+     <v-app-bar-nav-icon @click="drawer = !drawer">
+     </v-app-bar-nav-icon>
+    </v-toolbar>
     <v-navigation-drawer light app
     clipped v-model="drawer"
     :permanent="activateDrawer ? false : true"
@@ -33,7 +37,7 @@
       <!-- logged in user  -->
 
       <!-- User Profile  -->
-            <v-list-item dense active-class="primary lighten-5" link :to="{name: 'AdminProfile'}">
+            <v-list-item dense exact-path link :to="{name: 'AdminProfile'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -58,7 +62,7 @@
             </v-list-item>
 
       <!-- roles  -->
-            <v-list-item dense link>
+            <v-list-item exact-path dense link>
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
