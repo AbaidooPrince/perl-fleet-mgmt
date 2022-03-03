@@ -3,6 +3,7 @@
     <new-item-page-layout
     listLink="PersonnelList"
     listPage="Personnel"
+    :crumb="editMode ? personnel.firstName : ''"
     title="New Person"
     :processing="processing"
     @cancel-action="cancelAction"
@@ -50,6 +51,7 @@ import NewItemPageLayout from '../layouts/NewItemPageLayout.vue'
 
 export default {
   name: 'NewPersonnel',
+  props: ['editMode'],
   components: { NewItemPageLayout, BasicDetailsForm, UserAccessForm },
   data () {
     return {
@@ -75,7 +77,27 @@ export default {
       })
     }
   },
+  computed: {
+    personnel: {
+      get () {
+        return this.$store.state.users.user
+      }
+    }
+  },
   methods: {
+    actionMode () {
+      if (this.editMode === true) {
+        this.updateUser()
+      } else {
+        this.addUser()
+      }
+    },
+    fillForm () {
+      if (this.editMode === true) {
+        this.basicDetails.fill(this.personnel)
+        this.userAccess.fill(this.personnel)
+      }
+    },
     cancelAction () {
       this.$refs.userForm.reset()
       this.$router.push({ name: 'PersonnelList' })
@@ -102,7 +124,32 @@ export default {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error adding user!' })
         this.processing = false
       }
+    },
+    async updateUser () {
+      if (!this.$refs.userForm.validate()) return
+      this.processing = true
+      const user = {
+        ...this.basicDetails,
+        ...this.userAccess
+      }
+      const response = await this.$store.dispatch('users/updateUser', user)
+      console.log(response)
+      if (response === 'success') {
+        this.processing = false
+        this.$store.dispatch('showSnackBar', { error: false, message: 'User updated successfully!' })
+        // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
+      } else if (response === 'error') {
+        this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating user!' })
+        this.processing = false
+        console.log('error', response)
+      } else {
+        this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating user!' })
+        this.processing = false
+      }
     }
+  },
+  created () {
+    this.fillForm()
   }
 
 }

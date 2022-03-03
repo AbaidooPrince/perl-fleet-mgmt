@@ -35,3 +35,9 @@ a :hover {
 .menu-active-class {
     background-color: #003A66 !important;
   }
+  .toolbar-header {
+      position: sticky;
+      position: -webkit-sticky;
+      top: 7%;
+      z-index: 3;
+  }

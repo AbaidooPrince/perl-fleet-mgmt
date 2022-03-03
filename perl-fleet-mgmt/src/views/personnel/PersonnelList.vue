@@ -9,18 +9,20 @@
       >
       <template #body>
   <v-data-table
+  :loading="loading"
   fixed-header
+  height="400"
   hide-default-footer
     v-model="selected"
     :headers="headers"
-    :items="desserts"
+    :items="allPersonnel"
     :single-select="singleSelect"
     item-key="name"
     show-select
-    class="elevation-1 tables"
+    class="tables bg-white"
   >
     <template v-slot:top>
-      <v-container>
+      <v-container class="pt-0 filter-group bg-white pt-3">
       <filter-group></filter-group>
         <v-row>
         <v-divider class="my-0"></v-divider>
@@ -40,7 +42,7 @@
         </v-btn>
       </template>
         <v-list dense>
-          <v-list-item v-for="menu in actionItems" :key="menu.id" @click="action(item)">
+          <v-list-item exact-path :to="{name: `${menu.routeName}`, params: { userID: item.id}}"  v-for="menu in actionItems" :key="menu.id" @click="action(item)">
             <v-list-item-title class="small">{{ menu.name }}</v-list-item-title>
             <v-list-item-content>
             </v-list-item-content>
@@ -71,16 +73,20 @@
 <script>
 import ListPageLayout from '../layouts/ListPageLayout.vue'
 import FilterGroup from '../../components/common/FilterGroup.vue'
+import common from '../../mixins/common'
 export default {
   components: { ListPageLayout, FilterGroup },
   name: 'PersonnelList',
+  mixins: ['common'],
   data () {
     return {
       singleSelect: false,
+      loading: false,
+      ...common,
       actionItems: [
-        { id: 1, name: 'View', icon: 'mdi-arrow-right' },
-        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline' },
-        { id: 3, name: 'Deactivate User Access', icon: 'mdi-account-minus-outline' }
+        { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewPersonnel' },
+        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditPersonnel' },
+        { id: 3, name: 'Deactivate User Access', icon: 'mdi-account-minus-outline', routeName: 'DeactivatePersonnel' }
       ],
       selected: [],
       headers: [
@@ -88,7 +94,7 @@ export default {
           text: 'Name',
           align: 'start',
           sortable: false,
-          value: 'name'
+          value: 'firstName'
         },
         { text: 'Email', value: 'email' },
         { text: 'User Status', value: 'userStatus' },
@@ -190,8 +196,30 @@ export default {
       ]
     }
   },
-  action (data) {
-    console.log(data)
+  methods: {
+    action (data) {
+      console.log(data)
+    },
+    async getAllPersonnel () {
+      this.loading = true
+      const response = await this.$store.dispatch('users/getAllPersonnel', { page: 1 })
+      if (response === 'success') {
+        this.loading = false
+      } else if (response.error) {
+        this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
+        this.loading = false
+      }
+    }
+  },
+  computed: {
+    allPersonnel: {
+      get () {
+        return this.$store.state.users.users
+      }
+    }
+  },
+  created () {
+    this.getAllPersonnel()
   }
 }
 </script>
@@ -202,6 +230,16 @@ export default {
 }
 .tables:hover .table-actions {
   display: block;
+}
+.filter-group {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 25%;
+  z-index: 4;
+}
+.others {
+  position: absolute;
+  top: 2%;
 }
 
 </style>

@@ -33,7 +33,7 @@
       <!-- logged in user  -->
 
       <!-- User Profile  -->
-            <v-list-item active-class="primary lighten-5" link :to="{name: 'AdminProfile'}">
+            <v-list-item dense active-class="primary lighten-5" link :to="{name: 'AdminProfile'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -44,7 +44,7 @@
             </v-list-item>
 
             <!-- user management  -->
-            <v-list-item exact-path target="_blank" link :to="{name: 'UsersList'}">
+            <v-list-item dense exact-path target="_blank" link :to="{name: 'UsersList'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -58,12 +58,39 @@
             </v-list-item>
 
       <!-- roles  -->
-            <v-list-item link>
+            <v-list-item dense link>
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
           <v-list-item-subtitle>
             Role
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+ <!-- roles  -->
+            <v-list-item dense link exact-path :to="{name: 'Groups'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Groups
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <!-- vehicle settings  -->
+            <v-list-item dense>
+          <v-list-item-subtitle class="small font-weight-bold">
+            VEHICLES
+          </v-list-item-subtitle>
+            </v-list-item>
+
+             <!-- roles  -->
+            <v-list-item dense link exact-path :to="{name: 'VehicleStatus'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Vehicle Status
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>

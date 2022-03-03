@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  name: 'ListPageLayout',
+  name: 'ItemPageLayout',
   props: ['title', 'addButtonLabel', 'addRoute', 'links'],
   data () {
     return {

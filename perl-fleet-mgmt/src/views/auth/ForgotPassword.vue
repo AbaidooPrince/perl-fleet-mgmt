@@ -23,7 +23,8 @@
             <div>
               <label>Email address</label>
               <v-text-field
-              v-model="email"
+              v-model="forgotPassword.username"
+              :rules="[required('Email'), validEmail()]"
               dense
               outlined
               >
@@ -36,10 +37,12 @@
           </v-card-text>
           <v-card-actions class="">
             <v-btn
+            :disabled="processing"
+            @click="sendInstructions"
             block
             color="success"
             depressed
-            >Send me instructions
+            >{{ processing ? 'Sending instructions...' : 'Send me instructions' }}
             </v-btn>
           </v-card-actions>
           <v-card-text class="text-center pt-0">
@@ -58,6 +61,7 @@
 </template>
 
 <script>
+import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
 export default {
   name: 'Login',
@@ -65,7 +69,28 @@ export default {
   data () {
     return {
       showPassword: false,
-      email: ''
+      ...validation,
+      processing: false,
+      // eslint-disable-next-line no-undef
+      forgotPassword: new Form({
+        username: ''
+      })
+    }
+  },
+  methods: {
+    async sendInstructions () {
+      this.processing = true
+      const response = await this.$store.dispatch('authentication/requestPassword', this.forgotPassword)
+      if (response === 'success') {
+        this.processing = false
+        this.$store.dispatch('showSnackBar', { message: 'Instructions sent successfully!', error: false })
+        setTimeout(() => {
+          this.$router.push({ name: 'Login' })
+        }, 1500)
+      } else if (response.error) {
+        this.$store.dispatch('showSnackBar', { message: `${response.error.toString()}`, error: true })
+        this.processing = false
+      }
     }
   }
 

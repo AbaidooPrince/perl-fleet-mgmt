@@ -2,7 +2,7 @@
   <v-app>
     <regular-user-layout v-if="this.$route.meta.layout === 'user'"></regular-user-layout>
     <admin-user-layout v-else-if="this.$route.meta.layout === 'admin'"></admin-user-layout>
-    <v-main>
+    <v-main :class="this.$route.meta.layout !== 'admin' ? 'bg-white' : ''">
       <router-view/>
     </v-main>
     <v-snackbar

@@ -14,7 +14,7 @@
       <v-btn class="mx-2" small icon outlined>
         <v-icon size="15">mdi-plus</v-icon>
       </v-btn>
-      </div>
+    </div>
     </v-app-bar>
     <v-navigation-drawer dark app
     clipped v-model="drawer"
@@ -68,7 +68,7 @@
         exact-path
         :to="{name: `${item.routeName}`}"
           v-for="(item, index) in adminLinks"
-          :key="index"
+          :key="`admin_${index}`"
         >
           <v-list-item-title>{{ item.name }}</v-list-item-title>
         </v-list-item>
@@ -77,7 +77,7 @@
         exact-path
         :to="{name: `${item.routeName}`}"
           v-for="(item, index) in userLinks"
-          :key="index"
+          :key="`user_${index}`"
         >
           <v-list-item-title>{{ item.name }}</v-list-item-title>
         </v-list-item>

@@ -27,11 +27,22 @@ export default {
     }
   },
   actions: {
-    async verifyUser () {
+    async requestPassword ({ commit }, data) {
       try {
-        const response = await Api().post('/check-email-code')
-        if (response.data.message) {
-          return true
+        const response = await Api().post('/forgot-password', data)
+        if (response.data.message === 'success') {
+          return 'success'
+        }
+      } catch (e) {
+        console.log('pas', e.response.data)
+        return e.response.data
+      }
+    },
+    async verifyUser ({ commit }, data) {
+      try {
+        const response = await Api().post('/check-email-code', data)
+        if (response.data.message === 'success') {
+          return 'success'
         }
       } catch (e) {
       }
@@ -43,11 +54,15 @@ export default {
           setAuthToken(response.data.token)
           commit('SET_USER_TYPE', response.data.user.UserType)
           commit('SET_CURRENT_USER', response.data.user)
+          commit('SET_AUTH_TOKEN', response.data.token)
           return 'success'
         }
+        if (response.data.error) {
+          return response.data.error
+        }
       } catch (e) {
-        console.log(e)
-        return 'error'
+        console.log(e.response)
+        return e.response.data
       }
     }
   },

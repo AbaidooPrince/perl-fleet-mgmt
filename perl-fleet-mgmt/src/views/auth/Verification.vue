@@ -62,7 +62,7 @@
 <script>
 import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
-import user from '../../mixins/user'
+// import user from '../../mixins/user'
 export default {
   name: 'Verification',
   components: { AuthLayout },
@@ -91,9 +91,12 @@ export default {
       console.log('response', response)
       if (response === 'success') {
         this.processing = false
+        this.$store.dispatch('showSnackBar', {
+          error: false,
+          message: 'Account verified successfully!'
+        })
         this.$router.push({
-          name: 'UserDashboard',
-          params: { userRouteID: user.computed.userRouteID }
+          name: 'Login'
         })
       } else if (response === 'error') {
         this.$store.dispatch('showSnackBar', {

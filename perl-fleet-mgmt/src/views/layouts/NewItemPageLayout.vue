@@ -9,6 +9,9 @@
               </v-icon> {{ listPage }}
             </router-link>
           </small>
+          <span v-if="crumb">
+            > <label  class="small" for="">{{ crumb ? crumb : '' }}</label>
+          </span>
         </div>
         <div>
        <h4 class="font-weight-bold"> {{ title ? title  : 'Page Title'}} </h4>
@@ -42,7 +45,7 @@
 <script>
 export default {
   name: 'NewItemPageLayout',
-  props: ['listPage', 'listLink', 'title', 'processing'],
+  props: ['listPage', 'listLink', 'title', 'processing', 'crumb'],
   methods: {
     cancelAction () {
       this.$emit('cancel-action')

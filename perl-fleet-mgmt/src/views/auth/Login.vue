@@ -68,7 +68,7 @@
 <script>
 import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
-import user from '../../mixins/user'
+// import user from '../../mixins/user'
 export default {
   name: 'Login',
   components: { AuthLayout },
@@ -94,14 +94,22 @@ export default {
       console.log('response', response)
       if (response === 'success') {
         this.processing = false
-        this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
-      } else if (response === 'error') {
-        this.$store.dispatch('showSnackBar', { error: true, message: 'Error Loging you in!' })
+        // console.log('userRouteID', user)
+        this.$router.push({ name: 'UserDashboard', params: { userRouteID: this.userRouteID } })
+      } else if (response.error) {
+        this.$store.dispatch('showSnackBar', { error: true, message: `${response.error}` })
         this.processing = false
         console.log('error', response)
       } else {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error Loging you in!' })
         this.processing = false
+      }
+    }
+  },
+  computed: {
+    userRouteID: {
+      get () {
+        return this.$store.state.authentication.userRouteID
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row no-gutters>
-      <v-col cols="12" md="3" align-self="center">
+    <v-row no-gutters class="">
+      <v-col cols="12" md="3" align-self="center" class="pt-0">
         <v-text-field
         class="mr-2"
         dense
@@ -11,7 +11,7 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="12" md="6" align-self="center">
+      <v-col cols="12" md="6" align-self="center" class="pt-0">
         <div class="d-flex justify-start">
           <div class="custom-input-width mr-2">
           <v-autocomplete
@@ -53,36 +53,21 @@
         </div>
         </div>
       </v-col>
-      <v-col cols="12" md="3" align-self="center">
-        <div class="d-flex justify-space-around">
-          <div>
-            <label class="caption px-1">1 - 1 of 1</label>
-          </div>
-          <div>
-        <v-btn-toggle v-model="pagination" mandatory>
-          <v-btn small class="">
-            <v-icon>mdi-chevron-left
-            </v-icon>
-          </v-btn>
-          <v-btn small>
-            <v-icon>mdi-chevron-right
-            </v-icon>
-          </v-btn>
-        </v-btn-toggle>
-          </div>
-        </div>
+      <v-col cols="12" md="3" align-self="center" class="mt-n4">
+        <custom-pagination></custom-pagination>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
+import CustomPagination from './CustomPagination.vue'
 export default {
+  components: { CustomPagination },
   name: 'FilterGroup',
   data () {
     return {
       search: '',
-      pagination: 1,
       userSatus: ['Active', 'Dormant', 'No Access']
     }
   },

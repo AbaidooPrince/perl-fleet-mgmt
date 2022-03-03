@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import authentication from './modules/authentication'
 import users from './modules/users'
+import vehicles from './modules/vehicles'
 
 Vue.use(Vuex)
 
@@ -22,7 +23,7 @@ export default new Vuex.Store({
     userStatus: [
       { id: 1, name: 'Active', color: 'success' },
       { id: 2, name: 'Deactivated', color: 'error lighten-2' },
-      { id: 3, name: 'No Access', color: 'grey' }
+      { id: 3, name: 'Pending', color: 'grey' }
     ]
   },
   mutations: {
@@ -53,7 +54,8 @@ export default new Vuex.Store({
   },
   modules: {
     authentication,
-    users
+    users,
+    vehicles
 
   }
 })

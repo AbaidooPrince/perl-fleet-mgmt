@@ -3,30 +3,30 @@ import Api from '../../services/api'
 export default {
   namespaced: true,
   state: {
-    usersPagination: {},
-    users: [],
-    user: {},
-    allGroups: []
+    vehiclePagination: {},
+    vehicles: [],
+    vehicle: {},
+    allStatus: []
   },
   mutations: {
-    SET_USERS_PAGINATION (state, data) {
-      state.usersPagination = data
+    SET_VEHICLES_PAGINATION (state, data) {
+      state.vehiclePagination = data
     },
-    SET_USERS (state, data) {
+    SET_VEHICLES (state, data) {
       state.users = data
     },
-    SET_USER (state, data) {
+    SET_VEHICLE (state, data) {
       state.user = data
     },
-    SET_GROUPS (state, data) {
-      state.allGroups = data
+    SET_ALL_VEHICLE_STATUS (state, data) {
+      state.allVehicleStatus = data
     }
   },
   actions: {
     // /users/group
-    async addGroup ({ commit }, data) {
+    async addVehicleStatus ({ commit }, data) {
       try {
-        const response = await Api().post('/users/group', data)
+        const response = await Api().post('/vehicles/status', data)
         if (response.data.message === 'success') {
           return 'success'
         }
@@ -35,11 +35,11 @@ export default {
         return e.response.data
       }
     },
-    async getAllGroups ({ commit }) {
+    async getAllVehicleStatus ({ commit }) {
       try {
-        const response = await Api().get('/users/groups')
+        const response = await Api().get('/vehicles/statuses')
         if (response.data.message === 'success') {
-          commit('SET_GROUPS', response.data.groups)
+          commit('SET_ALL_VEHICLE_STATUS', response.data.groups)
           return 'success'
         }
       } catch (e) {
@@ -57,7 +57,7 @@ export default {
         return e.response.data
       }
     },
-    async getAllPersonnel ({ commit }, data) {
+    async getAllVehicles ({ commit }, data) {
       try {
         const response = await Api().get(`/users/paginated-users/${data.page}`)
         if (response.data.message === 'success') {
