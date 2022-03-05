@@ -152,8 +152,9 @@ export default {
         this.groupForm.fill(data)
         this.formDialog = true
       } else {
-        this.deleteItem = item
-        this.deleteDialog = true
+        this.deleteGroup(item)
+        // this.deleteItem = item
+        // this.deleteDialog = true
       }
     },
     closeDialog () {
@@ -163,6 +164,12 @@ export default {
     openForm () {
       this.formDialog = true
       this.$refs.groupForm.reset()
+    },
+    async deleteGroup (data) {
+      const response = this.$store.dispatch('users/deleteGroup', data)
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { message: 'Group deleted successfully', error: false })
+      }
     },
     async updateGroup () {
       try {

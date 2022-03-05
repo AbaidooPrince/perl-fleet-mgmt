@@ -34,6 +34,7 @@
                 </v-col>
                 <v-col cols="12" md="9" class="pb-0 pt-0">
                   <v-text-field outlined dense
+                  v-model="profile.firstName"
                   >
                   </v-text-field>
                 </v-col>
@@ -44,6 +45,7 @@
                 </v-col>
                 <v-col cols="12" md="9" class="pb-0 pt-0">
                   <v-text-field outlined dense
+                  v-model="profile.lastName"
                   >
                   </v-text-field>
                 </v-col>
@@ -54,6 +56,7 @@
                 </v-col>
                 <v-col cols="12" md="9" class="pb-0 pt-0">
                   <v-text-field outlined dense
+                  v-model="profile.email"
                   >
                   </v-text-field>
                 </v-col>
@@ -74,12 +77,23 @@
 </template>
 
 <script>
+import user from '../mixins/user'
 export default {
   name: 'UserProfile',
+  mixins: [user],
   data () {
     return {
-      defaultProfile: require('@/assets/profile.svg')
+      defaultProfile: require('@/assets/profile.svg'),
+      // eslint-disable-next-line no-undef
+      profile: new Form({
+        firstName: '',
+        lastName: '',
+        email: ''
+      })
     }
+  },
+  created () {
+    this.profile.fill(this.currentUser)
   }
 
 }

@@ -23,6 +23,18 @@ export default {
     }
   },
   actions: {
+    async deleteVehicleStatus ({ dispatch }, data) {
+      try {
+        const response = await Api().delete(`/vehicles/status/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllVehicleStatus')
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
     // /users/group
     async addVehicleStatus ({ dispatch }, data) {
       try {

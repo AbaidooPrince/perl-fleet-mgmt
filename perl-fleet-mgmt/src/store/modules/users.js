@@ -59,6 +59,18 @@ export default {
         return e.response.data
       }
     },
+    async deleteGroup ({ dispatch }, data) {
+      try {
+        const response = await Api().delete(`/users/group/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllGroups')
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
     async updateGroup ({ dispatch }, data) {
       try {
         const response = await Api().put(`/users/group/${data.id}`, data)

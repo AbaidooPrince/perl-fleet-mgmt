@@ -151,8 +151,9 @@ export default {
         this.vehicleStatusForm.fill(data)
         this.formDialog = true
       } else {
-        this.deleteItem = item
-        this.deleteDialog = true
+        this.deleteVehicleStatus(item)
+        // this.deleteItem = item
+        // this.deleteDialog = true
       }
     },
     closeDialog () {
@@ -167,6 +168,12 @@ export default {
         this.updateVehicleStatus()
       } else {
         this.addVehicleStatus()
+      }
+    },
+    async deleteVehicleStatus (data) {
+      const response = this.$store.dispatch('vehicles/deleteVehicleStatus', data)
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { message: 'Status deleted successfully', error: false })
       }
     },
     async updateVehicleStatus () {
