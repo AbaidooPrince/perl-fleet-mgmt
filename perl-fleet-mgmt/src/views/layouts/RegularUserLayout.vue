@@ -42,7 +42,7 @@
             </span>
           </div>
           <label class="small font-weight-light">
-            Prince Abaidoo
+            {{ fullname }}
           </label>
         </div>
       </template>
@@ -315,6 +315,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import user from '../../mixins/user'
 import { clearAuthToken, isLoggedIn } from '../../services/auth'
 export default {
@@ -342,8 +343,9 @@ export default {
       ...user
     }
   },
-  mixins: ['user'],
+  mixins: [user],
   computed: {
+    ...mapGetters({ fullname: 'authentication/fullname' }),
     activateDrawer () {
       return this.$vuetify.breakpoint.width < '1000'
     }
@@ -354,7 +356,10 @@ export default {
         this.$store.dispatch('authentication/clearCurrentUser')
         clearAuthToken()
         document.cookie = 'authToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+        this.$router.push({ name: 'Login' })
         this.$store.dispatch('showSnackBar', { message: 'Logged out successfully!' })
+      } else {
+        this.$router.push({ name: 'Login' })
       }
     },
     watchResize () {

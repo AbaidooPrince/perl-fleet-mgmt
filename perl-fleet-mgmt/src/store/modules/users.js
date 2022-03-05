@@ -8,6 +8,29 @@ export default {
     user: {},
     allGroups: []
   },
+  getters: {
+    userBasicDetails: state => {
+      return {
+        id: state.user.id,
+        firstName: state.user.firstName,
+        middleName: state.user.middleName,
+        lastName: state.user.lastName,
+        email: state.user.email,
+        profileImage: state.user.profileImage,
+        groupId: state.user.groupId,
+        personnelType: state.user.personnelType,
+        employee: state.user.employee,
+        operator: state.user.operator
+      }
+    },
+    userUserAccess: state => {
+      return {
+        userTypeId: state.user.userTypeId,
+        accessEnabled: state.user.accessEnabled,
+        role: state.user.role
+      }
+    }
+  },
   mutations: {
     SET_USERS_PAGINATION (state, data) {
       state.usersPagination = data
@@ -23,6 +46,19 @@ export default {
     }
   },
   actions: {
+    // /users/group
+    async deleteUser ({ dispatch }, data) {
+      try {
+        const response = await Api().delete(`/users/user/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch(`${data.dispatch}`)
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
     async updateGroup ({ dispatch }, data) {
       try {
         const response = await Api().put(`/users/group/${data.id}`, data)

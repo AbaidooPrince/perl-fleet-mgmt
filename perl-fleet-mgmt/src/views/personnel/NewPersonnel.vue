@@ -16,7 +16,7 @@
       <basic-details-form
       :form="basicDetails"
       ></basic-details-form>
-      <user-access-form :form="userAccess" />
+      <user-access-form :role="role" :form="userAccess" />
       </v-container>
       </v-form>
     </template>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import BasicDetailsForm from '../../components/personnel/BasicDetailsForm.vue'
 import UserAccessForm from '../../components/personnel/UserAccessForm.vue'
 import NewItemPageLayout from '../layouts/NewItemPageLayout.vue'
@@ -56,6 +57,7 @@ export default {
   data () {
     return {
       processing: false,
+      role: 1,
       // eslint-disable-next-line no-undef
       basicDetails: new Form({
         id: '',
@@ -72,12 +74,15 @@ export default {
       // eslint-disable-next-line no-undef
       userAccess: new Form({
         userTypeId: 2,
-        accessEnabled: false,
-        role: 1
+        accessEnabled: false
       })
     }
   },
   computed: {
+    ...mapGetters(
+      { userBasicDetails: 'users/userBasicDetails' }
+    ),
+    ...mapGetters({ userUserAccess: 'users/userUserAccess' }),
     personnel: {
       get () {
         return this.$store.state.users.user
@@ -94,8 +99,8 @@ export default {
     },
     fillForm () {
       if (this.editMode === true) {
-        this.basicDetails.fill(this.personnel)
-        this.userAccess.fill(this.personnel)
+        this.basicDetails.fill(this.userBasicDetails)
+        this.userAccess.fill(this.userUserAccess)
       }
     },
     cancelAction () {
@@ -137,6 +142,7 @@ export default {
       if (response === 'success') {
         this.processing = false
         this.$store.dispatch('showSnackBar', { error: false, message: 'User updated successfully!' })
+        this.processing = false
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
       } else if (response === 'error') {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating user!' })

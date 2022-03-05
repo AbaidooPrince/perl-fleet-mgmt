@@ -22,6 +22,7 @@
         <v-col cols="12" md="6" class="pb-0">
               <label>Last Name</label>
               <v-text-field
+              v-model="form.lastName"
               dense
               outlined
               >
@@ -30,6 +31,7 @@
         <v-col cols="12" class="pb-0 pt-0">
               <label>Middle Name</label>
               <v-text-field
+              v-model="form.middleName"
               dense
               outlined
               >

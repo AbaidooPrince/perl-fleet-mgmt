@@ -29,6 +29,37 @@
         </v-row>
       </v-container>
     </template>
+
+    <!-- personnel name  -->
+    <template  class="pl-0" v-slot:[`item.firstName`]="{ item }">
+      <span class="pr-1">
+        <v-avatar size="35">
+          <v-img :src="defaultImage"></v-img>
+        </v-avatar>
+      </span>
+      {{  item.firstName }} {{ item.middleName }} {{ item.lastName }}
+    </template>
+    <!-- user status  -->
+    <template  class="pl-0" v-slot:[`item.userStatusId`]="{ item }">
+      <v-badge dot :color="getUserStatus(item.userStatusId).color" inline></v-badge> {{ getUserStatus(item.userStatusId).name }}
+    </template>
+    <!-- user group  -->
+    <template  class="pl-0" v-slot:[`item.groupId`]="{ item }">
+      <span v-if="getGroup(item.groupId).length">{{ getGroup(item.groupId)[0].name ? getGroup(item.groupId)[0].name : ''  }}</span>
+    </template>
+    <!-- user classs  -->
+    <template  class="pl-0" v-slot:[`item.employee`]="{ item }">
+      <div class="">
+      <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge>
+      </div>
+      <!-- <div class=""> -->
+      <v-badge color="grey" class="text-dark"  :value="item.operator" :content="item.operator ? 'Operator' : ''"></v-badge>
+      <!-- </div> -->
+    </template>
+    <!-- getUserType -->
+    <template  class="pl-0" v-slot:[`item.userTypeId`]="{ item }">
+      {{ getUserType(item.userTypeId)}}
+    </template>
     <template class="table-actions" v-slot:[`item.id`]="{ item }">
     <v-menu offset-y left rounded="lg"
       transition="slide-x-transition">
@@ -51,7 +82,7 @@
             </v-list-item-action>
           </v-list-item>
           <v-divider class="my-1"></v-divider>
-          <v-list-item @click="action(item)">
+          <v-list-item @click="deleteUser(item)">
             <v-list-item-title class="small">Archive</v-list-item-title>
             <v-list-item-content>
             </v-list-item-content>
@@ -74,16 +105,17 @@
 import ListPageLayout from '../layouts/ListPageLayout.vue'
 import FilterGroup from '../../components/common/FilterGroup.vue'
 import common from '../../mixins/common'
+import users from '../../mixins/user'
 export default {
   components: { ListPageLayout, FilterGroup },
   props: [''],
   name: 'PersonnelList',
-  mixins: ['common'],
+  mixins: [common, users],
   data () {
     return {
+      defaultImage: require('../../assets/profile.svg'),
       singleSelect: false,
       loading: false,
-      ...common,
       actionItems: [
         { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewPersonnel' },
         { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditPersonnel' },
@@ -95,13 +127,15 @@ export default {
           text: 'Name',
           align: 'start',
           sortable: false,
-          value: 'firstName'
+          value: 'firstName',
+          width: 200,
+          class: 'pl-0'
         },
         { text: 'Email', value: 'email' },
-        { text: 'User Status', value: 'userStatus' },
-        { text: 'User Type', value: 'userType' },
-        { text: 'Classification', value: 'classification' },
-        { text: 'Group', value: 'group' },
+        { text: 'User Status', value: 'userStatusId', width: 120 },
+        { text: 'User Type', value: 'userTypeId' },
+        { text: 'Classification', value: 'employee' },
+        { text: 'Group', value: 'groupId' },
         { text: 'Employee Number', value: 'employeeNumber' },
         { text: 'Assigned Vehicles', value: 'assignedVehicles' },
         { text: '', value: 'id' }
@@ -198,6 +232,15 @@ export default {
     }
   },
   methods: {
+    getGroup (id) {
+      return this.groups.filter(group => group.id === id)
+    },
+    getUserStatus (id) {
+      return this.userStatus.filter(user => user.id === id)[0]
+    },
+    getUserType (id) {
+      return this.userTypes.filter(user => user.id === id)[0].name
+    },
     async getUser () {
       const response = await this.$store.dispatch('users/getUser', this.userID)
       if (response === 'success') {
@@ -209,6 +252,15 @@ export default {
         if (response === 'success') {
           this.$router.push({ name: 'EditPersonnel', params: { userID: data.id } })
         }
+      }
+      // else if (action === 'Deactivate User Access') {
+      //   this.deleteUser(data, this.filter.dispatch)
+      // }
+    },
+    async deleteUser (data) {
+      const response = this.$store.dispatch('users/deleteUser', { dispatch: this.filter.dispatch, ...data })
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { message: 'User deleted successfully', error: false })
       }
     },
     async getAllPersonnel () {
@@ -226,6 +278,16 @@ export default {
     }
   },
   computed: {
+    // userTypes: {
+    //   get () {
+    //     return this.$store.state.userStatus
+    //   }
+    // },
+    // userStatus: {
+    //   get () {
+    //     return this.$store.state.userStatus
+    //   }
+    // },
     filter: {
       get () {
         return this.$route.meta.filter

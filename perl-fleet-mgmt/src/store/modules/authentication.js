@@ -30,6 +30,11 @@ export default {
       state.verifiedUserID = data
     }
   },
+  getters: {
+    fullname: state => {
+      return state.currentUser.firstName + ' ' + state.currentUser.lastName
+    }
+  },
   actions: {
     async resetPassword ({ commit }, data) {
       try {
@@ -67,6 +72,7 @@ export default {
         const response = await Api().post('/login', data)
         if (response.data.message === 'success') {
           setAuthToken(response.data.token)
+          commit('SET_USER_ID', response.data.user.id)
           commit('SET_USER_TYPE', response.data.user.UserType)
           commit('SET_CURRENT_USER', response.data.user)
           commit('SET_AUTH_TOKEN', response.data.token)

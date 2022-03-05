@@ -23,7 +23,7 @@
             <div v-if="isResetPassword">
               <div class="d-flex justify-space-between">
               <label>Old Password</label>
-              <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small>
+              <!-- <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small> -->
               </div>
               <v-text-field
               v-model="passwordSetForm.oldPassword"
@@ -57,11 +57,11 @@
               <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small>
               </div>
               <v-text-field
-              v-model="passwordSetForm.password"
+              v-model="passwordSetForm.confirm"
               :type="showPassword ? 'text' : 'password'"
               dense
               outlined
-              :rules="[required('Password')]"
+              :rules="[required('Password'), passwordMatch(passwordSetForm.password)]"
               >
               </v-text-field>
             </div>
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import { logout } from '../../services/auth'
 import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
 // import user from '../../mixins/user'
@@ -117,6 +118,7 @@ export default {
       if (response === 'success') {
         this.processing = false
         // console.log('userRouteID', user)
+        logout()
         this.$router.push({ name: 'Login' })
       } else if (response.error) {
         this.$store.dispatch('showSnackBar', { error: true, message: `${response.error}` })

@@ -108,7 +108,6 @@ A Regular User is assigned a Role. The Role controls the actions they can take i
                 <label for="roles">Roles <strong>*</strong></label>
                 <v-select
                 outlined
-                :rules="[required('Role')]"
                 dense
                 hint="Regular User Roles and their permissions are managed in Account Settings."
                 persistent-hint
@@ -132,7 +131,7 @@ import { isAdmin } from '../../services/auth'
 import validation from '../../services/validation'
 export default {
   name: 'UserAccessForm',
-  props: ['form'],
+  props: ['form', 'role'],
   mixins: ['user'],
   data () {
     return {

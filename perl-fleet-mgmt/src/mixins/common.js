@@ -21,8 +21,35 @@ export default {
     }
   },
   methods: {
+    getFullName (fN, mN, lN) {
+      console.log(fN, mN, lN)
+      return fN + ' ' + mN ? (mN + ' ') : '' + lN
+    },
     truncateId (id) {
       return id.split('-')[0]
+    },
+    getGroup (id) {
+      const name = this.groups.filter(group => group.id === id)[0]
+      if (name.length) {
+        return name[0].name
+      }
+    }
+  },
+  computed: {
+    userTypes: {
+      get () {
+        return this.$store.state.userType
+      }
+    },
+    groups: {
+      get () {
+        return this.$store.state.users.allGroups
+      }
+    },
+    userStatus: {
+      get () {
+        return this.$store.state.userStatus
+      }
     }
   }
 }
