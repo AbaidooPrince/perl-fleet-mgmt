@@ -59,11 +59,15 @@
         </v-col>
         <v-col cols="12" class="pb-0 pt-0">
               <label>Group</label>
-              <v-text-field
+              <v-select
+              v-model="form.groupId"
+              :items="groups"
+              item-text="name"
+              item-value="id"
               dense
               outlined
               >
-              </v-text-field>
+              </v-select>
         </v-col>
         <v-col cols="12" class="pt-0">
           <label>Profile Image</label>
@@ -110,10 +114,12 @@
 </template>
 
 <script>
+import common from '../../mixins/common'
 import validation from '../../services/validation'
 export default {
   name: 'BasicDetailsForm',
   props: ['form'],
+  mixins: [common],
   data () {
     return {
       ...validation,
