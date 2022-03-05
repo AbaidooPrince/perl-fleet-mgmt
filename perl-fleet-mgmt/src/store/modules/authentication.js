@@ -7,7 +7,8 @@ export default {
     currentUser: {},
     token: null,
     userType: {},
-    userRouteID: ''
+    userRouteID: '',
+    verifiedUserID: ''
   },
   mutations: {
     SET_AUTH_TOKEN (state, data) {
@@ -24,9 +25,22 @@ export default {
       state.userType = null
       state.token = null
       state.currentUser = null
+    },
+    SET_USER_ID (state, data) {
+      state.verifiedUserID = data
     }
   },
   actions: {
+    async resetPassword ({ commit }, data) {
+      try {
+        const response = await Api().post('/reset-password', data)
+        if (response.data.message === 'success') {
+          return 'success'
+        }
+      } catch (e) {
+
+      }
+    },
     async requestPassword ({ commit }, data) {
       try {
         const response = await Api().post('/forgot-password', data)
@@ -42,6 +56,7 @@ export default {
       try {
         const response = await Api().post('/check-email-code', data)
         if (response.data.message === 'success') {
+          commit('SET_USER_ID', response.data.user.id)
           return 'success'
         }
       } catch (e) {

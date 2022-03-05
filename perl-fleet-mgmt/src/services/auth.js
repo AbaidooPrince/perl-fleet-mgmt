@@ -46,6 +46,7 @@ export function logout () {
   clearAuthToken()
   store.dispatch('authentication/clearCurrentUser')
   sessionStorage.clear()
+  Cookies.set(AUTH_TOKEN_KEY, null)
 }
 export function clearAuthToken () {
   axios.defaults.headers.common.Authorization = ''

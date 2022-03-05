@@ -3,6 +3,7 @@
     <auth-layout class="">
       <template #header>
         <v-img
+        v-if="!isResetPassword"
         position="center center"
         src="../../assets/brand/fleetgh-logo-horizontal.svg"
         >
@@ -14,49 +15,68 @@
         elevation="1"
         >
           <v-card-title class="justify-center">
-            <h2 class="font-weight-bold">Login to Fleetgh</h2>
+            <h2 class="font-weight-bold">Password Setting</h2>
           </v-card-title>
           <v-card-text>
-            <v-form ref="login_form" >
-            <!-- email or user name -->
-            <div>
-              <label>Email address or username</label>
+            <v-form ref="password_set_form" >
+            <!-- old password  -->
+            <div v-if="isResetPassword">
+              <div class="d-flex justify-space-between">
+              <label>Old Password</label>
+              <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small>
+              </div>
               <v-text-field
-              v-model="loginForm.username"
+              v-model="passwordSetForm.oldPassword"
+              type="text"
               dense
               outlined
-              :rules="[required('Email'), validEmail()]"
+              :rules="isResetPassword ? [required('Password'), minLength('Password', 8)] : ''"
+              >
+              </v-text-field>
+            </div>
+            <!-- password  -->
+            <div>
+              <div class="d-flex justify-space-between">
+              <label>New Password</label>
+              <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small>
+              </div>
+              <v-text-field
+              v-model="passwordSetForm.password"
+              :type="showPassword ? 'text' : 'password'"
+              dense
+              outlined
+              :rules="[required('Password'), minLength('Password', 8)]"
               >
               </v-text-field>
             </div>
 
-            <!-- password  -->
+            <!-- confirm password  -->
             <div>
               <div class="d-flex justify-space-between">
-              <label>Password</label>
+              <label>Confirm Password</label>
               <small class="" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }} Password</small>
               </div>
               <v-text-field
-              v-model="loginForm.password"
+              v-model="passwordSetForm.password"
               :type="showPassword ? 'text' : 'password'"
               dense
               outlined
-              :rules="[required('Password'), minLength('Password', 4)]"
+              :rules="[required('Password')]"
               >
               </v-text-field>
             </div>
-            <div class="text-right mt-n2">
+            <!-- <div class="text-right mt-n2">
               <router-link class="my-link" to="/forgot-password">Forgot password?</router-link>
-            </div>
+            </div> -->
             </v-form>
           </v-card-text>
           <v-card-actions class="mb-3">
             <v-btn
-            @click="login"
+            @click="resetPassword"
             block
             color="success"
             depressed
-            >{{ processing ? 'Just a moment...' : 'Log in'}}
+            >{{ processing ? 'Just a moment...' : 'Reset'}}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -66,12 +86,11 @@
 </template>
 
 <script>
-import { isLoggedIn } from '../../services/auth'
 import validation from '../../services/validation'
 import AuthLayout from '../layouts/AuthLayout.vue'
 // import user from '../../mixins/user'
 export default {
-  name: 'Login',
+  name: 'PasswordSetting',
   components: { AuthLayout },
   data () {
     return {
@@ -80,23 +99,25 @@ export default {
       loginValid: false,
       ...validation,
       // eslint-disable-next-line no-undef
-      loginForm: new Form({
-        username: '',
+      passwordSetForm: new Form({
+        id: '',
+        oldPassword: '',
         password: ''
       })
     }
   },
   mixins: ['user'],
   methods: {
-    async login () {
-      if (!this.$refs.login_form.validate()) return
+    async resetPassword () {
+      if (!this.$refs.password_set_form.validate()) return
       this.processing = true
-      const response = await this.$store.dispatch('authentication/logUserIn', this.loginForm)
+      this.passwordSetForm.id = this.verifiedUserID
+      const response = await this.$store.dispatch('authentication/resetPassword', this.passwordSetForm)
       console.log('response', response)
       if (response === 'success') {
         this.processing = false
         // console.log('userRouteID', user)
-        this.$router.push({ name: 'UserDashboard', params: { userRouteID: this.userRouteID } })
+        this.$router.push({ name: 'Login' })
       } else if (response.error) {
         this.$store.dispatch('showSnackBar', { error: true, message: `${response.error}` })
         this.processing = false
@@ -108,16 +129,21 @@ export default {
     }
   },
   computed: {
-    isLoggedIn () {
-      return isLoggedIn()
+    isResetPassword: {
+      get () {
+        return this.$route.name === 'ChangePassword'
+      }
+    },
+    verifiedUserID: {
+      get () {
+        return this.$store.state.authentication.verifiedUserID
+      }
     },
     userRouteID: {
       get () {
         return this.$store.state.authentication.userRouteID
       }
     }
-  },
-  created () {
   }
 
 }

@@ -29,12 +29,36 @@ const index = [
     component: () => import(/* webpackChunkName: "about" */ '../views/auth/Verification.vue')
   },
   {
+    path: '/password/verification',
+    name: 'PasswordVerfication',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Verification.vue')
+  },
+  {
+    path: '/reset-password',
+    name: 'PasswordSetting',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/PasswordSetting.vue')
+  },
+  {
     path: '/forgot-password',
-    name: 'Login',
+    name: 'ForgotPassword',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/auth/ForgotPassword.vue')
+  },
+  {
+    path: '/login',
+    name: 'Logout',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue')
   }
 ]
 

@@ -81,6 +81,17 @@ export default {
   },
   mixins: ['user'],
   methods: {
+    verifyOption () {
+      if (this.$route.name === 'PasswordVerfication') {
+        this.$router.push({
+          name: 'PasswordSetting'
+        })
+      } else {
+        this.$router.push({
+          name: 'Login'
+        })
+      }
+    },
     async verifyCode () {
       if (!this.$refs.login_form.validate()) return
       this.processing = true
@@ -93,11 +104,9 @@ export default {
         this.processing = false
         this.$store.dispatch('showSnackBar', {
           error: false,
-          message: 'Account verified successfully!'
+          message: 'Code verified successfully!'
         })
-        this.$router.push({
-          name: 'Login'
-        })
+        this.verifyOption()
       } else if (response === 'error') {
         this.$store.dispatch('showSnackBar', {
           error: true,

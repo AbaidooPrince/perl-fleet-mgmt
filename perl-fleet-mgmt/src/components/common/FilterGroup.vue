@@ -13,12 +13,12 @@
       </v-col>
       <v-col cols="12" md="6" align-self="center" class="pt-0">
         <div class="d-flex justify-start">
-          <div class="custom-input-width mr-2">
+          <div class="custom-input-width mr-2" v-if="filter.userStatus">
           <v-autocomplete
           dense
           background-color="grey lighten-4"
           label="User Status"
-          :items="userStatus"
+          :items="userStatuses"
           item-text="name"
           outlined
           clearable
@@ -37,12 +37,12 @@
                 </template>
           </v-autocomplete>
         </div>
-          <div class="custom-input-width mr-2">
+          <div class="custom-input-width mr-2" v-if="filter.userType">
           <v-autocomplete
           dense
           label="User Type"
           background-color="grey lighten-4"
-          :items="userType"
+          :items="userTypes"
           item-text="name"
           outlined
           clearable
@@ -64,6 +64,7 @@
 import CustomPagination from './CustomPagination.vue'
 export default {
   components: { CustomPagination },
+  props: ['filter'],
   name: 'FilterGroup',
   data () {
     return {
@@ -72,12 +73,12 @@ export default {
     }
   },
   computed: {
-    userStatus: {
+    userStatuses: {
       get () {
         return this.$store.state.userStatus
       }
     },
-    userType: {
+    userTypes: {
       get () {
         return this.$store.state.userType
       }

@@ -23,7 +23,7 @@
   >
     <template v-slot:top>
       <v-container class="pt-0 filter-group bg-white pt-3">
-      <filter-group></filter-group>
+      <filter-group :filter="filter" ></filter-group>
         <v-row>
         <v-divider class="my-0"></v-divider>
         </v-row>
@@ -42,7 +42,7 @@
         </v-btn>
       </template>
         <v-list dense>
-          <v-list-item exact-path :to="{name: `${menu.routeName}`, params: { userID: item.id}}"  v-for="menu in actionItems" :key="menu.id" @click="action(item)">
+          <v-list-item exact-path  v-for="menu in actionItems" :key="menu.id" @click="action(item, menu.name)">
             <v-list-item-title class="small">{{ menu.name }}</v-list-item-title>
             <v-list-item-content>
             </v-list-item-content>
@@ -76,6 +76,7 @@ import FilterGroup from '../../components/common/FilterGroup.vue'
 import common from '../../mixins/common'
 export default {
   components: { ListPageLayout, FilterGroup },
+  props: [''],
   name: 'PersonnelList',
   mixins: ['common'],
   data () {
@@ -197,12 +198,22 @@ export default {
     }
   },
   methods: {
-    action (data) {
-      console.log(data)
+    async getUser () {
+      const response = await this.$store.dispatch('users/getUser', this.userID)
+      if (response === 'success') {
+      }
+    },
+    async action (data, action) {
+      if (action === 'Edit') {
+        const response = await this.$store.dispatch('users/getUser', data.id)
+        if (response === 'success') {
+          this.$router.push({ name: 'EditPersonnel', params: { userID: data.id } })
+        }
+      }
     },
     async getAllPersonnel () {
       this.loading = true
-      const response = await this.$store.dispatch('users/getAllPersonnel', { page: 1 })
+      const response = await this.$store.dispatch(`users/${this.filter.dispatch}`, { page: 1 })
       if (response === 'success') {
         this.loading = false
       } else if (response.error) {
@@ -215,13 +226,18 @@ export default {
     }
   },
   computed: {
+    filter: {
+      get () {
+        return this.$route.meta.filter
+      }
+    },
     allPersonnel: {
       get () {
         return this.$store.state.users.users
       }
     }
   },
-  created () {
+  mounted () {
     this.getAllPersonnel()
   }
 }

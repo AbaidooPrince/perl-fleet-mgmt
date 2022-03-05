@@ -73,7 +73,8 @@ export default {
       processing: false,
       // eslint-disable-next-line no-undef
       forgotPassword: new Form({
-        username: ''
+        username: '',
+        url: window.location.host + '/paswword/verification'
       })
     }
   },
@@ -85,7 +86,7 @@ export default {
         this.processing = false
         this.$store.dispatch('showSnackBar', { message: 'Instructions sent successfully!', error: false })
         setTimeout(() => {
-          this.$router.push({ name: 'Login' })
+          this.$router.push({ name: 'PasswordVerification' })
         }, 1500)
       } else if (response.error) {
         this.$store.dispatch('showSnackBar', { message: `${response.error.toString()}`, error: true })

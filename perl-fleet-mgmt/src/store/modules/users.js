@@ -70,17 +70,51 @@ export default {
         return e.response.data
       }
     },
-    async getAllPersonnel ({ commit }, data) {
+    setUsersData ({ commit }, response) {
+      commit('SET_USERS', response.data.users.data)
+      commit('SET_USERS_PAGINATION', {
+        firstPage: response.data.users.firstPage,
+        lastPage: response.data.users.lastPage,
+        currentPage: response.data.users.currentPage
+      })
+      return 'success'
+    },
+    async getAllPersonnel ({ dispatch }, data) {
       try {
         const response = await Api().get(`/users/paginated-users/${data.page}`)
         if (response.data.message === 'success') {
-          commit('SET_USERS', response.data.users.data)
-          commit('SET_USERS_PAGINATION', {
-            firstPage: response.data.users.firstPage,
-            lastPage: response.data.users.lastPage,
-            currentPage: response.data.users.currentPage
-          })
-          return 'success'
+          return dispatch('setUsersData', response)
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async getAllUsers ({ dispatch }, data) {
+      try {
+        const response = await Api().get(`/users/users-with-access/${data.page}`)
+        if (response.data.message === 'success') {
+          return dispatch('setUsersData', response)
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async getAllNonAccessUsers ({ dispatch }, data) {
+      try {
+        const response = await Api().get(`/users/users-without-access/${data.page}`)
+        if (response.data.message === 'success') {
+          return dispatch('setUsersData', response)
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    // getAllArchivedUsers
+    async getAllArchivedUsers ({ dispatch }, data) {
+      try {
+        const response = await Api().get(`/users/users-without-access/${data.page}`)
+        if (response.data.message === 'success') {
+          return dispatch('setUsersData', response)
         }
       } catch (e) {
         return e.response.data

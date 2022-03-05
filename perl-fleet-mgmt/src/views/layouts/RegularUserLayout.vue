@@ -81,6 +81,10 @@
         >
           <v-list-item-title>{{ item.name }}</v-list-item-title>
         </v-list-item>
+        <v-list-item @click="logout"
+        >
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
         <v-spacer>
@@ -312,6 +316,7 @@
 
 <script>
 import user from '../../mixins/user'
+import { clearAuthToken, isLoggedIn } from '../../services/auth'
 export default {
   name: 'RegularUserLayout',
   data () {
@@ -331,10 +336,7 @@ export default {
           id: 1, name: 'User Profile', routeName: 'UserProfile'
         },
         {
-          id: 2, name: 'Change Password', routeName: 'PasswordChange'
-        },
-        {
-          id: 3, name: 'Logout', routeName: 'Logout'
+          id: 2, name: 'Change Password', routeName: 'ChangePassword'
         }
       ],
       ...user
@@ -347,6 +349,14 @@ export default {
     }
   },
   methods: {
+    logout () {
+      if (isLoggedIn()) {
+        this.$store.dispatch('authentication/clearCurrentUser')
+        clearAuthToken()
+        document.cookie = 'authToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+        this.$store.dispatch('showSnackBar', { message: 'Logged out successfully!' })
+      }
+    },
     watchResize () {
       // alert(this.$vuetify.breakpoint.width)
       if (this.$vuetify.breakpoint.width < '986') {

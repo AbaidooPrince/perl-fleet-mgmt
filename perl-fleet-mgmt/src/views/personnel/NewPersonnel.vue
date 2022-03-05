@@ -7,7 +7,7 @@
     title="New Person"
     :processing="processing"
     @cancel-action="cancelAction"
-    @add-action="addUser"
+    @add-action="saveOption"
     >
     <!-- <v-container> -->
     <template #formView>
@@ -31,7 +31,7 @@
           <div class="">
           <v-btn class="mx-2" outlined color="primary">Save &amp; Add Another
           </v-btn>
-          <v-btn @click="addUser" depressed color="primary">Save Personnel
+          <v-btn @click="saveOption" depressed color="primary">Save Personnel
           </v-btn>
           </div>
         </v-col>
@@ -85,7 +85,7 @@ export default {
     }
   },
   methods: {
-    actionMode () {
+    saveOption () {
       if (this.editMode === true) {
         this.updateUser()
       } else {

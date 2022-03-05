@@ -11,6 +11,7 @@
             </v-card-title>
             <v-divider class="mt-0"></v-divider>
             <v-card-text>
+              <v-form ref="groupForm">
               <div>
                 <label>Group Name <strong>*</strong></label>
                 <v-text-field :rules="[required('Group Name')]" dense outlined
@@ -19,6 +20,7 @@
                 >
                 </v-text-field>
               </div>
+              </v-form>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>

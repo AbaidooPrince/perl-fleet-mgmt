@@ -67,7 +67,7 @@
       <v-dialog v-model="formDialog"
       width="400"
       >
-      <v-form ref="group_form">
+      <v-form ref="groupForm">
         <group-form :editMode="editMode" :form="groupForm">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     saveOption () {
-      if (!this.$refs.group_form.validate()) return
+      if (!this.$refs.groupForm.validate()) return
       if (this.editMode) {
         this.updateGroup()
       } else {
@@ -157,12 +157,12 @@ export default {
       }
     },
     closeDialog () {
-      this.$refs.group_form.reset()
+      this.$refs.groupForm.reset()
       this.formDialog = false
     },
     openForm () {
-      this.groupForm.reset()
       this.formDialog = true
+      this.$refs.groupForm.reset()
     },
     async updateGroup () {
       try {

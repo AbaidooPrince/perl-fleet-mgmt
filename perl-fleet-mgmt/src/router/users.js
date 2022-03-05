@@ -32,7 +32,16 @@ export default [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
     meta: {
-      layout: 'user'
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllPersonnel',
+        userType: true,
+        userStatus: true,
+        classification: true,
+        group: true,
+        userRole: false,
+        emailConfirmed: false
+      }
     }
   },
   {
@@ -42,9 +51,18 @@ export default [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/personnel/UsersList.vue'),
     meta: {
-      layout: 'user'
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllUsers',
+        userType: true,
+        userStatus: true,
+        classification: false,
+        group: true,
+        userRole: false,
+        emailConfirmed: true
+      }
     }
   },
   {
@@ -56,7 +74,16 @@ export default [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
     meta: {
-      layout: 'user'
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllNonAccessUsers',
+        userType: false,
+        userStatus: false,
+        classification: true,
+        group: true,
+        userRole: false,
+        emailConfirmed: false
+      }
     }
   },
   {
@@ -68,7 +95,16 @@ export default [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/personnel/PersonnelList.vue'),
     meta: {
-      layout: 'user'
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllArchivedUsers',
+        userType: true,
+        userStatus: true,
+        classification: true,
+        group: true,
+        userRole: false,
+        emailConfirmed: false
+      }
     }
   },
   {
@@ -115,6 +151,18 @@ export default [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/UserProfile.vue'),
+    meta: {
+      layout: 'user'
+    }
+  },
+  {
+    path: '/:userRouteID/reset-password',
+    name: 'ChangePassword',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/PasswordSetting.vue'),
     meta: {
       layout: 'user'
     }
