@@ -8,7 +8,10 @@
 import PageUnderConstruction from './PageUnderConstruction.vue'
 export default {
   components: { PageUnderConstruction },
-  name: 'Dashboard'
+  name: 'Dashboard',
+  created () {
+    this.$store.dispatch('users/getAllGroups')
+  }
 
 }
 </script>
