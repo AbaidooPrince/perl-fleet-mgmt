@@ -42,20 +42,26 @@
 
     <!-- vehicle name  -->
     <template  class="pl-0" v-slot:[`item.vehicleId`]="{ item }">
-      <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
-      <span class="pr-1">
-        <v-avatar size="35">
-          <v-img :src="item.photo ? item.photo : defaultImage"></v-img>
-        </v-avatar>
-      </span>
-      <span class="mt-auto">
-      {{  item.name }}
-      </span>
+      <router-link :to="{name: 'Overview', params: {vehicleID:  item.id, userRouteID: userRouteID}}">
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img :src="item.Vehicle ? item.Vehicle.photo : defaultVehicle"></v-img>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+      {{  item.Vehicle ? item.Vehicle.name : ''}}
+          </v-list-item-title>
+                        <v-list-item-subtitle>
+                        </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+        <!-- <v-avatar size="35">
+        </v-avatar> -->
       </router-link>
     </template>
     <!-- vehicle status  -->
     <template  class="pl-0" v-slot:[`item.startDate`]="{ item }">
-      {{ item.startDate }}
+      {{ item.startDate ? getDateTime(item.startDate) : '' }}
     </template>
     <!-- user classs  -->
     <template  class="pl-0" v-slot:[`item.operatorAccountId`]="{ item }">
@@ -129,6 +135,7 @@
 </template>
 
 <script>
+// import { format } from 'date-fns'
 // import ListPageLayout from '../layouts/ListPageLayout.vue'
 import common from '../../mixins/common'
 import users from '../../mixins/user'
@@ -148,6 +155,8 @@ export default {
         operatorAccountId: null,
         startDate: null,
         startTime: null,
+        startingDate: null,
+        endingDate: null,
         endTime: null,
         endDate: null,
         comment: ''
@@ -177,7 +186,8 @@ export default {
         { text: 'Assignee', value: 'operatorAccountId' },
         { text: 'Sart Date', value: 'startDate', width: 120 },
         { text: 'End Date', value: 'endDate' },
-        { text: 'Comment', value: 'comment' }
+        { text: 'Comment', value: 'comment' },
+        { text: '', value: 'id' }
       ],
       links: [
         { id: 1, routeName: 'VehicleList', name: 'All' },
@@ -205,13 +215,16 @@ export default {
     }
   },
   methods: {
+    getDateTime (date) {
+      return date.toLocaleString()
+    },
     triggerDialog () {
       this.dialog = true
     },
     async saveAssignment () {
-      this.startDate = `${this.startDate}T${this.startTime}:00Z`
-      this.endDate = `${this.endDate}T${this.endDate}:00Z`
-      // console.log('date', this.startDate)
+      this.assignmentForm.startDate = `${this.assignmentForm.startingDate}T${this.assignmentForm.startTime}:00Z`
+      this.assignmentForm.endDate = `${this.assignmentForm.endingDate}T${this.assignmentForm.endTime}:00Z`
+      console.log('date', this.startDate)
       const response = this.$store.dispatch('vehicles/addVehicleAssignment', this.assignmentForm)
       if (response === 'success') {
         this.$store.dispatch('showSnackBar', { message: 'Vehicle Assigned Successfully', error: false })
@@ -223,10 +236,16 @@ export default {
     },
     async action (data, action) {
       if (action === 'Edit') {
-        const response = await this.$store.dispatch('vehicles/getVehicle', data.id)
-        if (response === 'success') {
-          this.$router.push({ name: 'EditVehicleDetails', params: { vehicleID: data.id } })
-        }
+        this.assignmentForm.fill(data)
+        // this.assignmentForm.sartingDate = this.assignmentForm.startDate.toLocaleDateString()
+        // this.assignmentForm.endingDate = this.assignmentForm.endingDate.toLocaleDateString()
+        // this.assignmentForm.startTime = this.assignmentForm.startDate.toLocaleTimeString()
+        // this.assignmentForm.endTime = this.assignmentForm.endDate.toLocaleTimeString()
+        this.dialog = true
+        // const response = await this.$store.dispatch('vehicles/getVehicle', data.id)
+        // if (response === 'success') {
+        //   this.$router.push({ name: 'EditVehicleDetails', params: { vehicleID: data.id } })
+        // }
       } else if (action === 'View') {
         this.$router.push({ name: 'Overview', params: { vehicleID: data.id } })
       }

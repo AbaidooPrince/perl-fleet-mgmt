@@ -327,14 +327,15 @@ export default {
     },
     // vehicle inspections Actions
     async getAllInspections ({ commit }, data) {
+      console.log(data)
       try {
-        const response = await Api().get(`/vehicles/assign-vehicles/${data.page}`)
+        const response = await Api().get(`/vehicles/inspections/${data.page}`)
         if (response.data.message === 'success') {
-          commit('SET_ALL_INSPECTIONS', response.data.assignments.data)
+          commit('SET_ALL_INSPECTIONS', response.data.inspections.data)
           commit('SET_INSPECTION_PAGINATION', {
-            firstPage: response.data.assignments.firstPage,
-            lastPage: response.data.assignments.lastPage,
-            currentPage: response.data.assignments.currentPage
+            firstPage: response.data.inspections.firstPage,
+            lastPage: response.data.inspections.lastPage,
+            currentPage: response.data.inspections.currentPage
           })
           return 'success'
         }
@@ -344,11 +345,11 @@ export default {
     },
     async addInspection ({ dispatch }, data) {
       try {
-        const response = await Api().post('vehicles/assign-vehicle', data)
+        const response = await Api().post('/vehicles/inspection', data)
         if (response.data.message === 'success') {
           // commit('EDIT_MODE', true)
-          dispatch('getAllInspections')
-          return 'success'
+          dispatch('getAllInspections', { page: 1 })
+          return { message: 'success', id: response.data.inspection.id }
         }
       } catch (e) {
         console.log(e)
@@ -377,7 +378,7 @@ export default {
         const response = await Api().post('vehicles/assign-vehicle', data)
         if (response.data.message === 'success') {
           // commit('EDIT_MODE', true)
-          dispatch('getAllVehicleAssignments')
+          dispatch('getAllVehicleAssignments', { page: 1 })
           return 'success'
         }
       } catch (e) {

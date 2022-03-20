@@ -15,7 +15,7 @@
   hide-default-footer
     v-model="selected"
     :headers="headers"
-    :items="allVehicles"
+    :items="allInspections"
     :single-select="singleSelect"
     item-key="name"
     show-select
@@ -31,26 +31,32 @@
     </template>
 
     <!-- vehicle name  -->
-    <template  class="pl-0" v-slot:[`item.name`]="{ item }">
+    <template  class="pl-0" v-slot:[`item.Vehicle`]="{ item }">
       <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
       <span class="pr-1">
         <v-avatar size="35" rounded="lg">
-          <v-img :src="item.photo ? item.photo : defaultImage"></v-img>
+          <v-img :src="item.Vehicle.photo ? item.Vehicle.photo : defaultVehicle"></v-img>
         </v-avatar>
       </span>
       <span class="mt-auto">
-      {{  item.name }}
+      {{  item.Vehicle.name }}
       </span>
       </router-link>
     </template>
     <!-- vehicle status  -->
-    <template  class="pl-0" v-slot:[`item.VehicleClassification.vehicleStatusId`]="{ item }">
-      <v-badge dot
-      :color="getVehicleStatus(item.VehicleClassification.vehicleStatusId) ? getVehicleStatus(item.VehicleClassification.vehicleStatusId).color : ''" inline></v-badge> {{ getVehicleStatus(item.VehicleClassification.vehicleStatusId) ? getVehicleStatus(item.VehicleClassification.vehicleStatusId).name : '' }}
+    <template  class="pl-0" v-slot:[`item.checkList`]="{ item }">
+      <span v-if="item.checkList !== null">
+        <v-chip x-small v-for="(name, n) in getFailedData(item.checkList)" :key="n+'name'">
+          {{ name.itemName }}
+        </v-chip>
+      </span>
     </template>
     <!-- user group  -->
-    <template  class="pl-0" v-slot:[`item.VehicleClassification.groupId`]="{ item }">
-      <span v-if="getGroup(item.VehicleClassification.groupId).length">{{ getGroup(item.VehicleClassification.groupId)[0].name ? getGroup(item.VehicleClassification.groupId)[0].name : ''  }}</span>
+    <template  class="pl-0" v-slot:[`item.inspectorId`]="{ item }">
+      <span v-if="item.inspectorId !== null">
+        {{ getUser(item.inspectorId).firstName }}
+        {{ getUser(item.inspectorId).lastName }}
+      </span>
     </template>
     <!-- user classs  -->
     <template  class="pl-0" v-slot:[`item.employee`]="{ item }">
@@ -124,29 +130,21 @@ export default {
       singleSelect: false,
       loading: false,
       actionItems: [
-        { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewVehicle' },
-        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' },
-        { id: 3, name: 'Deactivate User Access', icon: 'mdi-account-minus-outline', routeName: 'DeactivateVehicle' }
+        { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewInspectionReport' }
+        // { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' }
       ],
       selected: [],
       headers: [
         {
-          text: 'Name',
+          text: 'Vehicle',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'Vehicle',
           width: 250,
           class: 'pl-0'
         },
-        { text: 'VIN', value: 'vin' },
-        { text: 'License Plate', value: 'licensePlate', width: 100 },
-        { text: 'Type', value: 'vehicleTypeId' },
-        { text: 'Staus', value: 'VehicleClassification.vehicleStatusId' },
-        { text: 'Group', value: 'VehicleClassification.groupId', width: 100 },
-        { text: 'Operator', value: 'VehicleClassification.operatorAccountId', width: 100 },
-        { text: 'Year', value: 'year' },
-        { text: 'Make', value: 'Make', width: 100 },
-        { text: 'Model', value: 'Model', width: 100 },
+        { text: 'Failed Items', value: 'checkList' },
+        { text: 'Inspected by', value: 'inspectorId', width: 100 },
         { text: '', value: 'id' }
       ],
       links: [
@@ -163,13 +161,25 @@ export default {
         return this.$route.meta.filter
       }
     },
-    allVehicles: {
+    allInspections: {
       get () {
-        return this.$store.state.vehicles.vehicles
+        return this.$store.state.vehicles.allInspections
       }
     }
   },
   methods: {
+    getFailedData (data) {
+      console.log('data', data)
+      if (data !== null) {
+        const failed = data.filter((fail) => {
+          return fail.status === false
+        // if (fail.status === false) {
+        //   failed.push(fail)
+        // }
+        })
+        return failed
+      }
+    },
     getData () {
       this.$store.dispatch('vehicles/getAllVehicleModels')
     },
@@ -180,7 +190,7 @@ export default {
           this.$router.push({ name: 'EditVehicleDetails', params: { vehicleID: data.id } })
         }
       } else if (action === 'View') {
-        this.$router.push({ name: 'Overview', params: { vehicleID: data.id } })
+        this.$router.push({ name: 'ViewInspectionReport', params: { inspectionId: data.id } })
       }
       // else if (action === 'Deactivate User Access') {
       //   this.deleteUser(data, this.filter.dispatch)
@@ -193,6 +203,7 @@ export default {
       }
     },
     async getAllVehicles () {
+      console.log('dispatch', this.filter.dispatch)
       this.loading = true
       const response = await this.$store.dispatch(`vehicles/${this.filter.dispatch}`, { page: 1 })
       if (response === 'success') {

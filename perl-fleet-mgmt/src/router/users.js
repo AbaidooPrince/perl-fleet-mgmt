@@ -218,6 +218,7 @@ export default [
     ]
   },
   {
+    // ViewInspectionReport
     path: '/:userRouteID/inspections',
     name: 'InspectionList',
     props: true,
@@ -235,6 +236,20 @@ export default [
         group: true,
         userRole: false,
         emailConfirmed: false
+      }
+    }
+  },
+  {
+    path: '/:userRouteID/inspection/report/:inspectionId',
+    name: 'ViewInspectionReport',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/vehicles/inspections/InspectionReport.vue'),
+    meta: {
+      layout: 'user',
+      filter: {
       }
     }
   },

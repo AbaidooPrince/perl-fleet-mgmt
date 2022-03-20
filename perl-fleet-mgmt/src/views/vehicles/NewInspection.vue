@@ -44,6 +44,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 import InspectionForm from '../../components/inspection/InspectionForm.vue'
+import user from '../../mixins/user'
 // import BasicDetailsForm from '../../components/personnel/BasicDetailsForm.vue'
 // import UserAccessForm from '../../components/personnel/UserAccessForm.vue'
 import NewItemPageLayout from '../layouts/NewItemPageLayout.vue'
@@ -51,6 +52,7 @@ import NewItemPageLayout from '../layouts/NewItemPageLayout.vue'
 export default {
   name: 'NewPersonnel',
   props: ['editMode'],
+  mixins: [user],
   components: { NewItemPageLayout, InspectionForm },
   data () {
     return {
@@ -59,7 +61,8 @@ export default {
       // eslint-disable-next-line no-undef
       inspectionForm: new Form({
         vehicleId: null,
-        checklist: [
+        inspectorId: null,
+        checkList: [
           {
             itemName: 'Brake Inspection',
             status: null,
@@ -121,9 +124,9 @@ export default {
   methods: {
     saveOption () {
       if (this.editMode === true) {
-        this.updateVehicleAssignment()
+        this.updateInspection()
       } else {
-        this.addVehicleAssignment()
+        this.addInspection()
       }
     },
     fillForm () {
@@ -136,13 +139,15 @@ export default {
       this.$router.push({ name: 'InspectionList' })
       // inspectionForm
     },
-    async addVehicleAssignment () {
+    async addInspection () {
       if (!this.$refs.inspectionForm.validate()) return
       this.processing = true
-      const response = await this.$store.dispatch('vehicles/addVehicleAssignment', this.inspectionForm)
+      this.inspectionForm.inspectorId = this.currentUser.id
+      const response = await this.$store.dispatch('vehicles/addInspection', this.inspectionForm)
       console.log(response)
-      if (response === 'success') {
+      if (response.message === 'success') {
         this.processing = false
+        this.$router.push({ name: 'ViewInspectionReport', params: { inpspectionId: response.id } })
         this.$store.dispatch('showSnackBar', { error: false, message: 'Inspection added successfully!' })
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
       } else if (response === 'error') {
@@ -154,10 +159,10 @@ export default {
         this.processing = false
       }
     },
-    async updateVehicleAssignment () {
+    async updateInspection () {
       if (!this.$refs.inspectionForm.validate()) return
       this.processing = true
-      const response = await this.$store.dispatch('vehicles/updateVehicleAssignment', this.inspectionForm)
+      const response = await this.$store.dispatch('vehicles/updateInspection', this.inspectionForm)
       console.log(response)
       if (response === 'success') {
         this.processing = false

@@ -40,7 +40,7 @@
     Item Checklist
     </v-card-title>
         </v-col>
-        <v-col class="pt-0 pb-0" cols="12" md="12" v-for="(item, i) in form.checklist" :key="i+'item'">
+        <v-col class="pt-0 pb-0" cols="12" md="12" v-for="(item, i) in form.checkList" :key="i+'item'">
           <label class="font-weight-bold">{{ item.itemName }}
             <span>
               <v-icon :color="item.status === true ? 'success' : item.status === false ? 'error' : 'white'">mdi-{{ item.status === true ? 'check' : 'close' }}</v-icon>

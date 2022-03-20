@@ -107,7 +107,8 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="form.startDate"
+                        clearable
+                          v-model="form.startingDate"
                           prepend-inner-icon="mdi-calendar"
                           hint="(Ex: 2022-03-19 03:37 am)"
                           persistent-hint
@@ -119,8 +120,7 @@
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        :min="form.startDate"
-                        v-model="form.startDate"
+                        v-model="form.startingDate"
                         no-title
                         scrollable
                       >
@@ -135,7 +135,7 @@
                         <v-btn
                           text
                           color="primary"
-                          @click="$refs.menu.save(form.startDate)"
+                          @click="$refs.menu.save(form.startingDate)"
                         >
                           OK
                         </v-btn>
@@ -154,9 +154,10 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
+                        clearable
                           v-model="form.startTime"
                           prepend-inner-icon="mdi-clock-outline"
-                          :disabled="startDate === null"
+                          :disabled="form.startingDate === null"
                           readonly
                           outlined
                           dense
@@ -192,18 +193,19 @@
                       ref="menu2"
                       v-model="menu2"
                       :close-on-content-click="false"
-                      :return-value.sync="form.endDate"
+                      :return-value.sync="form.endingDate"
                       transition="scale-transition"
                       offset-y
                       min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="form.endDate"
+                        clearable
+                          v-model="form.endingDate"
                           prepend-inner-icon="mdi-calendar"
                           hint="(Ex: 2022-03-19 03:37 am)"
                           persistent-hint
-                          :disabled="startDate === null"
+                          :disabled="form.startingDate === null"
                           readonly
                           outlined
                           dense
@@ -211,7 +213,7 @@
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker :min="startDate" v-model="form.endDate" no-title scrollable>
+                      <v-date-picker :min="minEndDate" v-model="form.endingDate" no-title scrollable>
                         <v-spacer></v-spacer>
                         <v-btn
                           text
@@ -223,7 +225,7 @@
                         <v-btn
                           text
                           color="primary"
-                          @click="$refs.menu2.save(form.endDate)"
+                          @click="$refs.menu2.save(form.endingDate)"
                         >
                           OK
                         </v-btn>
@@ -242,17 +244,18 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
+                        clearable
                           v-model="form.endTime"
                           prepend-inner-icon="mdi-clock-outline"
                           readonly
                           outlined
-                          :disabled="form.endDate === null"
+                          :disabled="form.endingDate === null"
                           dense
                           v-bind="attrs"
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-time-picker v-model="endTime" no-title scrollable>
+                      <v-time-picker v-model="form.endTime" no-title scrollable>
                         <v-spacer></v-spacer>
                         <v-btn
                           text
@@ -264,7 +267,7 @@
                         <v-btn
                           text
                           color="primary"
-                          @click="$refs.endTimeMenu.save(endTime)"
+                          @click="$refs.endTimeMenu.save(form.endTime)"
                         >
                           OK
                         </v-btn>
@@ -333,6 +336,11 @@ export default {
     }
   },
   computed: {
+    minEndDate: {
+      get () {
+        return this.form.startingDate || this.form.startDate
+      }
+    },
     allVehicles: {
       get () {
         return this.$store.state.vehicles.vehicles

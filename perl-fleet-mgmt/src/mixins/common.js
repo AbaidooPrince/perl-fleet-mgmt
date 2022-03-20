@@ -45,6 +45,9 @@ export default {
     }
   },
   methods: {
+    getUser (id) {
+      return this.allUsers.filter((user) => user.id === id)[0]
+    },
     addnewItem (name, store, dispatch) {
       this.$store.dispatch(`${store}/${dispatch}`, name)
       // const length = this.$store.state.users[`${store}`].length
@@ -100,6 +103,11 @@ export default {
     groups: {
       get () {
         return this.$store.state.users.allGroups
+      }
+    },
+    allUsers: {
+      get () {
+        return this.$store.state.users.users
       }
     },
     allOperators: {
