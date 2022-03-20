@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-app-bar class="app-main-bar">
+    <v-app-bar
+      class="app-main-bar">
       <v-app-bar-nav-icon @click="drawer = !drawer" v-if="drawer === false"> </v-app-bar-nav-icon>
       <v-spacer>
       </v-spacer>
@@ -122,7 +123,7 @@
           <v-icon class="pa-2" color="grey lighten-3">mdi-car</v-icon>
           <v-list-item-title>Vehicles</v-list-item-title>
         </template>
-            <v-list-item active-class="menu-active-class" link :to="{name: 'VehicleList'}">
+            <v-list-item exact active-class="menu-active-class" link :to="{name: 'VehicleList'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -131,7 +132,7 @@
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item link >
+            <v-list-item exact link active-class="menu-active-class" :to="{name: 'VehicleAssignmentList'}" >
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content class="pt-0 pb-0">
@@ -160,7 +161,7 @@
           <v-icon class="pa-2" color="grey lighten-3">mdi-check-circle</v-icon>
           <v-list-item-title>Inspections</v-list-item-title>
         </template>
-            <v-list-item link>
+            <v-list-item link exact active-class="menu-active-class" :to="{name: 'InspectionList'}" >
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -379,8 +380,8 @@ export default {
 
 <style scoped>
 .app-main-bar {
-  position: -webkit-sticky !important;
   position: sticky !important;
+  position: -webkit-sticky !important;
   top: 0 !important;
 }
 .drawer-app-bar {

@@ -11,6 +11,7 @@ export default {
   name: 'Dashboard',
   created () {
     this.$store.dispatch('users/getAllGroups')
+    this.$store.dispatch('vehicles/getAllVehicleStatus')
   }
 
 }

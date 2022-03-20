@@ -32,12 +32,16 @@
 
     <!-- personnel name  -->
     <template  class="pl-0" v-slot:[`item.firstName`]="{ item }">
+      <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
       <span class="pr-1">
         <v-avatar size="35">
-          <v-img :src="defaultImage"></v-img>
+          <v-img :src="item.profileImage ? item.profileImage : defaultImage"></v-img>
         </v-avatar>
       </span>
+      <span class="mt-auto">
       {{  item.firstName }} {{ item.middleName }} {{ item.lastName }}
+      </span>
+      </router-link>
     </template>
     <!-- user status  -->
     <template  class="pl-0" v-slot:[`item.userStatusId`]="{ item }">
@@ -134,10 +138,10 @@ export default {
         { text: 'Email', value: 'email' },
         { text: 'User Status', value: 'userStatusId', width: 120 },
         { text: 'User Type', value: 'userTypeId' },
-        { text: 'Classification', value: 'employee' },
-        { text: 'Group', value: 'groupId' },
-        { text: 'Employee Number', value: 'employeeNumber' },
-        { text: 'Assigned Vehicles', value: 'assignedVehicles' },
+        { text: 'Classification', value: 'employee', width: 130 },
+        { text: 'Group', value: 'groupId', width: 120 },
+        { text: 'Employee Number', value: 'employeeNumber', width: 170 },
+        { text: 'Assigned Vehicles', value: 'assignedVehicles', width: 250 },
         { text: '', value: 'id' }
       ],
       desserts: [
@@ -232,14 +236,8 @@ export default {
     }
   },
   methods: {
-    getGroup (id) {
+    getGroups (id) {
       return this.groups.filter(group => group.id === id)
-    },
-    getUserStatus (id) {
-      return this.userStatus.filter(user => user.id === id)[0]
-    },
-    getUserType (id) {
-      return this.userTypes.filter(user => user.id === id)[0].name
     },
     async getUser () {
       const response = await this.$store.dispatch('users/getUser', this.userID)

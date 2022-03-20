@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="bg-white">
     <v-toolbar flat class="toolbar-header">
       <v-toolbar-title>
         <h4 class="font-weight-bold">{{ title ? title : "Page Title" }}</h4>

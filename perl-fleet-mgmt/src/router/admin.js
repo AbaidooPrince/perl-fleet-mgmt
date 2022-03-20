@@ -36,6 +36,42 @@ export default [
     }
   },
   {
+    path: '/:userRouteID/admin/vehicle-types',
+    name: 'VehicleTypes',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/vehicles/VehicleTypes.vue'),
+    meta: {
+      layout: 'admin'
+    }
+  },
+  {
+    path: '/:userRouteID/admin/fuel-types',
+    name: 'FuelTypes',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/vehicles/FuelTypes.vue'),
+    meta: {
+      layout: 'admin'
+    }
+  },
+  {
+    path: '/:userRouteID/admin/vehicle-models',
+    name: 'VehicleModels',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/vehicles/VehicleModels.vue'),
+    meta: {
+      layout: 'admin'
+    }
+  },
+  {
     path: '/:userRouteID/admin/groups',
     name: 'Groups',
     props: true,

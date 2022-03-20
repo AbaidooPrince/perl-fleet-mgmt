@@ -98,6 +98,39 @@
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
+
+             <!-- vehicle types  -->
+            <v-list-item dense link exact-path :to="{name: 'VehicleTypes'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Vehicle Types
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+             <!-- fuel types  -->
+            <v-list-item dense link exact-path :to="{name: 'FuelTypes'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Fuel Types
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+             <!-- vehicle Models  -->
+            <v-list-item dense link exact-path :to="{name: 'VehicleModels'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Vehicle Models
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>

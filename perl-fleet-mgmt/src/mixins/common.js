@@ -1,6 +1,30 @@
 export default {
   data () {
     return {
+      defaultProfile: require('../assets/profile.svg'),
+      defaultVehicle: require('../assets/defaultVehicle.png'),
+      units: {
+        volume: 'ft<sup>3</sup>',
+        length: 'in',
+        weight: 'kg'
+      },
+      bodyType: [
+        'Conventional',
+        'Hatchback',
+        'Full-Size',
+        'Pickup'
+      ],
+      subBodyType: [
+        'Cargo',
+        'Ccrew Crab',
+        'Sleep Crab'
+      ],
+      ownerships: [
+        'Owned',
+        'Leased',
+        'Rented',
+        'Customer'
+      ],
       vehicleStatusColors: [
         { name: 'Navy', color: 'navy' },
         { name: 'Blue', color: 'blue' },
@@ -21,6 +45,20 @@ export default {
     }
   },
   methods: {
+    addnewItem (name, store, dispatch) {
+      this.$store.dispatch(`${store}/${dispatch}`, name)
+      // const length = this.$store.state.users[`${store}`].length
+      // const value = document.querySelector(`input[name=${name}]`).value
+      // console.log(value)
+      // const newItem = {
+      //   id: length,
+      //   name: value
+      // }
+      // console.log(newItem)
+      // this.$store.commit(`users/${commit}`, newItem)
+      // document.querySelector(`input[name=${name}]`).value = newItem.name
+      // this.form.makeId = newItem.id
+    },
     getFullName (fN, mN, lN) {
       console.log(fN, mN, lN)
       return fN + ' ' + mN ? (mN + ' ') : '' + lN
@@ -29,13 +67,31 @@ export default {
       return id.split('-')[0]
     },
     getGroup (id) {
-      const name = this.groups.filter(group => group.id === id)[0]
-      if (name.length) {
-        return name[0].name
-      }
+      return this.groups.filter(group => group.id === id)
+    },
+    getUserStatus (id) {
+      return this.userStatus.filter(user => user.id === id)[0]
+    },
+    getUserType (id) {
+      return this.userTypes.filter(user => user.id === id)[0].name
     }
   },
   computed: {
+    saving: {
+      get () {
+        return this.$store.state.save
+      }
+    },
+    updating: {
+      get () {
+        return this.$store.state.update
+      }
+    },
+    formEditMode: {
+      get () {
+        return this.$store.state.formEditMode
+      }
+    },
     userTypes: {
       get () {
         return this.$store.state.userType
@@ -46,9 +102,19 @@ export default {
         return this.$store.state.users.allGroups
       }
     },
+    allOperators: {
+      get () {
+        return this.$store.state.users.allOperators
+      }
+    },
     userStatus: {
       get () {
         return this.$store.state.userStatus
+      }
+    },
+    vehicleStatus: {
+      get () {
+        return this.$store.state.vehicles.allStatus
       }
     }
   }

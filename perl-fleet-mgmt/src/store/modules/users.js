@@ -6,7 +6,9 @@ export default {
     usersPagination: {},
     users: [],
     user: {},
-    allGroups: []
+    allGroups: [],
+    allOperators: [],
+    operatorsPagination: {}
   },
   getters: {
     userBasicDetails: state => {
@@ -43,6 +45,15 @@ export default {
     },
     SET_GROUPS (state, data) {
       state.allGroups = data
+    },
+    ADD_NEW_GROUP (state, data) {
+      state.allGroups.push(data)
+    },
+    SET_ALL_OPERATORS (state, data) {
+      state.allOperators = data
+    },
+    SET_OPERATORS_PAGINATION (state, data) {
+      state.operatorsPagination = data
     }
   },
   actions: {
@@ -205,6 +216,23 @@ export default {
       } catch (e) {
         return null
       }
+    },
+    async getAllOperators ({ commit }, data) {
+      try {
+        const response = await Api().get(`/users/users-operators/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_ALL_OPERATORS', response.data.operators.data)
+          commit('SET_OPERATORS_PAGINATION', {
+            firstPage: response.data.operators.firstPage,
+            lastPage: response.data.operators.lastPage,
+            currentPage: response.data.operators.currentPage
+          })
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
     }
+
   }
 }

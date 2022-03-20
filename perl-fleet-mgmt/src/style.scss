@@ -31,7 +31,16 @@ a {
 a :hover {
     text-decoration: none !important; 
 }
-
+.sub-menu-sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    height: 100%;
+    top: 10%;
+}
+.sub-menu-active {
+    color: #035797 !important;
+    border-left: solid 4px #035797 !important;
+}
 .menu-active-class {
     background-color: #003A66 !important;
   }
@@ -40,4 +49,33 @@ a :hover {
       position: -webkit-sticky;
       top: 7%;
       z-index: 3;
+  }
+  .text--error {
+      color: rgb(194, 21, 21);
+  }
+
+
+.activeLink {
+    border-bottom: solid 3px rgb(12, 12, 117);
+    width: 100%;
+    font-weight: bold;
+    color: black;
+  }
+  .list {
+    display: inline;
+    padding-left: 4px;
+  }
+  .line {
+    border-bottom: solid 1px rgba(128, 128, 128, 0.644);
+  }
+  .defaultLink {
+    cursor: pointer;
+  }
+  .defaultLink:hover {
+    border-bottom: solid 1px grey;
+  }
+ @media (min-width: 1200px) {
+      .container {
+        max-width: 100% !important;
+      }
   }

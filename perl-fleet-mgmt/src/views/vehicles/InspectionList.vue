@@ -1,10 +1,10 @@
 <template>
-  <div class="w-100">
-    <v-container class="bg-grey ml-0 mr-0">
+  <div class="">
+    <v-container class="bg-grey" fluid>
       <list-page-layout
-      title="Vehicles"
-      addButtonLabel="Add Vehicle"
-      :addRoute="{name: 'NewVehicle'}"
+      title="Inspection History"
+      addButtonLabel="Add Inspection"
+      :addRoute="{name: 'NewInspection'}"
       :links="links"
       >
       <template #body>
@@ -23,7 +23,7 @@
   >
     <template v-slot:top>
       <v-container class="pt-0 filter-group bg-white pt-3">
-        <vehicle-filter-group></vehicle-filter-group>
+        <!-- <vehicle-filter-group></vehicle-filter-group> -->
         <v-row>
         <v-divider class="my-0"></v-divider>
         </v-row>
@@ -112,11 +112,11 @@
 import ListPageLayout from '../layouts/ListPageLayout.vue'
 import common from '../../mixins/common'
 import users from '../../mixins/user'
-import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
+// import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
 export default {
-  components: { ListPageLayout, VehicleFilterGroup },
-  name: 'VehicleList',
+  components: { ListPageLayout },
+  name: 'InspectionList',
   mixins: [common, users, vehicles],
   data () {
     return {
@@ -150,10 +150,10 @@ export default {
         { text: '', value: 'id' }
       ],
       links: [
-        { id: 1, routeName: 'VehicleList', name: 'All' },
-        { id: 2, routeName: 'AssignedVehicles', name: 'Assigned Vehicles' },
-        { id: 3, routeName: 'UnassignedVehicles', name: 'Unassigned Vehicles' },
-        { id: 4, routeName: 'ArchivedVehicles', name: 'Archived' }
+        { id: 1, routeName: 'InspectionList', name: 'All' }
+        // { id: 2, routeName: 'AssignedVehicles', name: 'Assigned Vehicles' },
+        // { id: 3, routeName: 'UnassignedVehicles', name: 'Unassigned Vehicles' },
+        // { id: 4, routeName: 'ArchivedVehicles', name: 'Archived' }
       ]
     }
   },

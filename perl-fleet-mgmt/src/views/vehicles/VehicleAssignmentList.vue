@@ -1,13 +1,23 @@
 <template>
-  <div class="w-100">
-    <v-container class="bg-grey ml-0 mr-0">
-      <list-page-layout
-      title="Vehicles"
-      addButtonLabel="Add Vehicle"
-      :addRoute="{name: 'NewVehicle'}"
-      :links="links"
-      >
-      <template #body>
+  <div class="">
+    <v-toolbar flat height="" extension-height="20">
+    <div class="w-100">
+    <ul class="line">
+      <li @click="switchComponent(tab.routeName)" :class="isActiveTab === tab.routeName ? 'activeLink' : 'text-muted'" class="list mr-5 defaultLink" v-for="(tab, t) in tabs" :key="t+'ttab'"> {{ tab.name }}
+      </li>
+    </ul>
+    <!-- <v-divider class="mt-0"></v-divider> -->
+    </div>
+    <template v-slot:extension>
+        <h4 class="font-weight-bold">Vehicle Assignment</h4>
+        <v-spacer></v-spacer>
+        <v-btn small @click="triggerDialog" color="primary" depressed>
+          <v-icon small>mdi-plus</v-icon>
+          Add Assignment
+        </v-btn>
+    </template>
+    </v-toolbar>
+    <v-container class="bg-grey" fluid>
   <v-data-table
   :loading="loading"
   fixed-header
@@ -15,7 +25,7 @@
   hide-default-footer
     v-model="selected"
     :headers="headers"
-    :items="allVehicles"
+    :items="allVehicleAssignments"
     :single-select="singleSelect"
     item-key="name"
     show-select
@@ -23,7 +33,7 @@
   >
     <template v-slot:top>
       <v-container class="pt-0 filter-group bg-white pt-3">
-        <vehicle-filter-group></vehicle-filter-group>
+        <!-- <vehicle-filter-group></vehicle-filter-group> -->
         <v-row>
         <v-divider class="my-0"></v-divider>
         </v-row>
@@ -31,10 +41,10 @@
     </template>
 
     <!-- vehicle name  -->
-    <template  class="pl-0" v-slot:[`item.name`]="{ item }">
+    <template  class="pl-0" v-slot:[`item.vehicleId`]="{ item }">
       <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
       <span class="pr-1">
-        <v-avatar size="35" rounded="lg">
+        <v-avatar size="35">
           <v-img :src="item.photo ? item.photo : defaultImage"></v-img>
         </v-avatar>
       </span>
@@ -44,28 +54,18 @@
       </router-link>
     </template>
     <!-- vehicle status  -->
-    <template  class="pl-0" v-slot:[`item.VehicleClassification.vehicleStatusId`]="{ item }">
-      <v-badge dot
-      :color="getVehicleStatus(item.VehicleClassification.vehicleStatusId) ? getVehicleStatus(item.VehicleClassification.vehicleStatusId).color : ''" inline></v-badge> {{ getVehicleStatus(item.VehicleClassification.vehicleStatusId) ? getVehicleStatus(item.VehicleClassification.vehicleStatusId).name : '' }}
-    </template>
-    <!-- user group  -->
-    <template  class="pl-0" v-slot:[`item.VehicleClassification.groupId`]="{ item }">
-      <span v-if="getGroup(item.VehicleClassification.groupId).length">{{ getGroup(item.VehicleClassification.groupId)[0].name ? getGroup(item.VehicleClassification.groupId)[0].name : ''  }}</span>
+    <template  class="pl-0" v-slot:[`item.startDate`]="{ item }">
+      {{ item.startDate }}
     </template>
     <!-- user classs  -->
-    <template  class="pl-0" v-slot:[`item.employee`]="{ item }">
+    <template  class="pl-0" v-slot:[`item.operatorAccountId`]="{ item }">
       <div class="">
-      <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge>
+        {{ item.operatorAccountId }}
+      <!-- <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge> -->
       </div>
       <!-- <div class=""> -->
-      <v-badge color="grey" class="text-dark"  :value="item.operator" :content="item.operator ? 'Operator' : ''"></v-badge>
+      <!-- <v-badge color="grey" class="text-dark"  :value="item.operator" :content="item.operator ? 'Operator' : ''"></v-badge> -->
       <!-- </div> -->
-    </template>
-    <!-- getUserType -->
-    <template  class="pl-0" v-slot:[`item.vehicleTypeId`]="{ item }">
-      <span v-if="item.vehicleTypeId !== null">
-      {{ getVehicleType(item.vehicleTypeId) ? getVehicleType(item.vehicleTypeId) : '' }}
-      </span>
     </template>
     <template class="table-actions" v-slot:[`item.id`]="{ item }">
     <v-menu offset-y left rounded="lg"
@@ -102,27 +102,63 @@
       </v-menu>
     </template>
   </v-data-table>
-      </template>
-      </list-page-layout>
     </v-container>
+    <v-dialog
+      v-model="dialog"
+      width="600px"
+      persistent
+      transition="dialog-transition"
+    >
+    <vehicle-assignment-form :form="assignmentForm">
+      <template #close>
+      </template>
+      <template #action class="">
+        <div class="d-flex w-100 justify-content-between">
+          <div>
+          <v-btn @click="dialog = false" color="primary" text>Cancel</v-btn>
+          </div>
+          <div class="">
+          <v-btn depressed color="primary" @click="saveAssignment">Save</v-btn>
+          </div>
+        </div>
+      </template>
+    </vehicle-assignment-form>
+
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import ListPageLayout from '../layouts/ListPageLayout.vue'
+// import ListPageLayout from '../layouts/ListPageLayout.vue'
 import common from '../../mixins/common'
 import users from '../../mixins/user'
-import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
+// import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
+import VehicleAssignmentForm from '../../components/vehicle/VehicleAssignmentForm.vue'
 export default {
-  components: { ListPageLayout, VehicleFilterGroup },
-  name: 'VehicleList',
+  components: { VehicleAssignmentForm },
+  name: 'VehicleAssingmentList',
   mixins: [common, users, vehicles],
   data () {
     return {
-      defaultImage: require('../../assets/fleet1.jpg'),
+      dialog: false,
+      // eslint-disable-next-line no-undef
+      assignmentForm: new Form({
+        vehicleId: null,
+        operatorAccountId: null,
+        startDate: null,
+        startTime: null,
+        endTime: null,
+        endDate: null,
+        comment: ''
+      }),
+      defaultImage: require('../../assets/profile.svg'),
       singleSelect: false,
       loading: false,
+      tabs: [
+        { name: 'Vehicle List', routeName: 'AssignedVehicles' },
+        { name: 'Vehicle Assignment', routeName: 'VehicleAssignmentList' }
+      ],
       actionItems: [
         { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewVehicle' },
         { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' },
@@ -131,23 +167,17 @@ export default {
       selected: [],
       headers: [
         {
-          text: 'Name',
+          text: 'Vehicle',
           align: 'start',
           sortable: false,
-          value: 'name',
-          width: 250,
+          value: 'vehicleId',
+          width: 200,
           class: 'pl-0'
         },
-        { text: 'VIN', value: 'vin' },
-        { text: 'License Plate', value: 'licensePlate', width: 100 },
-        { text: 'Type', value: 'vehicleTypeId' },
-        { text: 'Staus', value: 'VehicleClassification.vehicleStatusId' },
-        { text: 'Group', value: 'VehicleClassification.groupId', width: 100 },
-        { text: 'Operator', value: 'VehicleClassification.operatorAccountId', width: 100 },
-        { text: 'Year', value: 'year' },
-        { text: 'Make', value: 'Make', width: 100 },
-        { text: 'Model', value: 'Model', width: 100 },
-        { text: '', value: 'id' }
+        { text: 'Assignee', value: 'operatorAccountId' },
+        { text: 'Sart Date', value: 'startDate', width: 120 },
+        { text: 'End Date', value: 'endDate' },
+        { text: 'Comment', value: 'comment' }
       ],
       links: [
         { id: 1, routeName: 'VehicleList', name: 'All' },
@@ -158,18 +188,36 @@ export default {
     }
   },
   computed: {
+    isActiveTab: {
+      get () {
+        return this.$route.name
+      }
+    },
     filter: {
       get () {
         return this.$route.meta.filter
       }
     },
-    allVehicles: {
+    allVehicleAssignments: {
       get () {
-        return this.$store.state.vehicles.vehicles
+        return this.$store.state.vehicles.allVehicleAssignments
       }
     }
   },
   methods: {
+    triggerDialog () {
+      this.dialog = true
+    },
+    async saveAssignment () {
+      this.startDate = `${this.startDate}T${this.startTime}:00Z`
+      this.endDate = `${this.endDate}T${this.endDate}:00Z`
+      // console.log('date', this.startDate)
+      const response = this.$store.dispatch('vehicles/addVehicleAssignment', this.assignmentForm)
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { message: 'Vehicle Assigned Successfully', error: false })
+        this.dialog = false
+      }
+    },
     getData () {
       this.$store.dispatch('vehicles/getAllVehicleModels')
     },

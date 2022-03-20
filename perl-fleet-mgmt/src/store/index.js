@@ -15,6 +15,9 @@ export default new Vuex.Store({
     snackbar: false,
     snackBarText: '',
     error: false,
+    formEditMode: false,
+    save: false,
+    update: false,
     userType: [
       { id: 1, name: 'Administrator' },
       { id: 2, name: 'Regular User' },
@@ -27,6 +30,20 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    RESET_MODE (state) {
+      state.save = false
+      state.update = false
+      state.formEditMode = false
+    },
+    EDIT_MODE (state, data) {
+      state.formEditMode = data
+    },
+    TRIGGER_SAVE (state, data) {
+      state.save = data
+    },
+    TRIGGER_UPDATE (state, data) {
+      state.update = data
+    },
     SET_SNACKBAR_ON (state) {
       state.snackbar = true
     },
