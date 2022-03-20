@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getUser (id) {
-      return this.allUsers.filter((user) => user.id === id)[0]
+      return this.allUsers?.filter((user) => user.id === id)[0]
     },
     addnewItem (name, store, dispatch) {
       this.$store.dispatch(`${store}/${dispatch}`, name)
