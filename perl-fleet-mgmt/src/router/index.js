@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import admin from './admin'
+import vehicles from './vehicles'
 import users from './users'
 
 Vue.use(VueRouter)
@@ -62,7 +63,7 @@ const index = [
   }
 ]
 
-const routes = index.concat(users, admin)
+const routes = index.concat(users, admin, vehicles)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

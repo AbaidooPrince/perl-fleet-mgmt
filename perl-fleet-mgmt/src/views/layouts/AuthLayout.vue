@@ -8,7 +8,7 @@
         </v-col>
         </v-row>
       <v-row align="center" justify="center">
-        <v-col cols="12" md="6" align-self="center">
+        <v-col cols="12" md="6" lg="4" align-self="center">
           <slot name='card'/>
         </v-col>
       </v-row>

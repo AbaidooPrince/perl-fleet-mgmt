@@ -93,7 +93,10 @@ export default {
       this.processing = true
       const response = await this.$store.dispatch('authentication/logUserIn', this.loginForm)
       console.log('response', response)
-      if (response === 'success') {
+      if (response && response !== 'success') {
+        this.$store.dispatch('showSnackBar', { error: true, message: `${response}` })
+        this.processing = false
+      } else if (response === 'success') {
         this.processing = false
         // console.log('userRouteID', user)
         this.$router.push({ name: 'UserDashboard', params: { userRouteID: this.userRouteID } })

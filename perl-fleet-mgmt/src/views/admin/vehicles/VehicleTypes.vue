@@ -206,7 +206,7 @@ export default {
     async getVehicleTypes () {
       this.loading = true
       try {
-        const response = await this.$store.dispatch('vehicles/getVehicleTypes')
+        const response = await this.$store.dispatch('vehicles/getVehicleTypes', { page: 1 })
         if (response === 'success') {
           this.loading = false
         }

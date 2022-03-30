@@ -10,6 +10,7 @@ import VueTippy, { TippyComponent } from 'vue-tippy'
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import 'tippy.js/themes/google.css'
 import './style.scss'
+import VehicleItem from './components/common/VehicleItem.vue'
 
 Vue.use(VueTippy, {
   directive: 'tippy', // => v-tippy
@@ -25,6 +26,7 @@ Vue.use(VueTippy, {
     }
   }
 })
+Vue.component('vehicle-item', VehicleItem)
 
 window.Fire = new Vue()
 window.Form = Form

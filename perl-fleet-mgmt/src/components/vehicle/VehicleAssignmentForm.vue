@@ -26,12 +26,20 @@
                     <template v-slot:selection="{ item }">
                       <span>
                         <v-chip small>
-                        {{ item.name }}
+                          {{ item.name }}
                         </v-chip>
                       </span>
                     </template>
                     <template v-slot:item="{ item, attrs, on }">
-                      <v-list-item two-line dense v-on="on" v-bind="attrs">
+                      <vehicle-item
+                        v-on="on"
+                        v-bind="attrs"
+                        :photo="item.photo"
+                        :vehicleGroupId="item.VehicleClassification.groupId"
+                        :vehicleStatusId="item.VehicleClassification.vehicleStatusId"
+                        :name="item.name"
+                      ></vehicle-item>
+                      <!-- <v-list-item two-line dense v-on="on" v-bind="attrs">
                         <v-list-item-avatar>
                           <v-img :src="item.photo ? item.photo : defaultVehicle"></v-img>
                         </v-list-item-avatar>
@@ -48,7 +56,7 @@
                           </span>
                         </v-list-item-subtitle>
                         </v-list-item-content>
-                      </v-list-item>
+                      </v-list-item> -->
                     </template>
                   </v-autocomplete>
                 </div>
@@ -66,29 +74,44 @@
                     <template v-slot:selection="{ item }">
                       <span>
                         <v-chip small color="primary lighten-3">
-                        {{ item.firstName ? item.firstName : '' }}
-                        {{ item.lastName ? item.lastName : '' }}
+                          {{ item.firstName ? item.firstName : "" }}
+                          {{ item.lastName ? item.lastName : "" }}
                         </v-chip>
                       </span>
                     </template>
                     <template v-slot:item="{ item, attrs, on }">
                       <v-list-item dense two-line v-on="on" v-bind="attrs">
-                          <v-list-item-avatar>
-                            <v-img :src="item.profileImage ? item.profileImage : defaultProfile"></v-img>
-                          </v-list-item-avatar>
+                        <v-list-item-avatar>
+                          <v-img
+                            :src="item.profileImage ? item.profileImage : defaultProfile"
+                          ></v-img>
+                        </v-list-item-avatar>
                         <v-list-item-content class="py-0">
-                        <v-list-item-title class="py-2">
-                        {{ item.firstName ? item.firstName : '' }}
-                        {{ item.middleName ? item.middleName : '' }}
-                        {{ item.lastName ? item.lastName : '' }}
-                        <span class="">
-                      <v-badge style="size: 10px;" class="small" offset-x="-2"  color="grey ligten-2" :value="item.employee" content="Employee"></v-badge>
-                      <v-badge class="small" offset-x="-80"  color="grey ligten-2" :value="item.operator" content="Operator"></v-badge>
-                        </span>
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="d-inline">
-                          {{ item.email ? item.email : ''}}
-                        </v-list-item-subtitle>
+                          <v-list-item-title class="py-2">
+                            {{ item.firstName ? item.firstName : "" }}
+                            {{ item.middleName ? item.middleName : "" }}
+                            {{ item.lastName ? item.lastName : "" }}
+                            <span class="">
+                              <v-badge
+                                style="size: 10px"
+                                class="small"
+                                offset-x="-2"
+                                color="grey ligten-2"
+                                :value="item.employee"
+                                content="Employee"
+                              ></v-badge>
+                              <v-badge
+                                class="small"
+                                offset-x="-80"
+                                color="grey ligten-2"
+                                :value="item.operator"
+                                content="Operator"
+                              ></v-badge>
+                            </span>
+                          </v-list-item-title>
+                          <v-list-item-subtitle class="d-inline">
+                            {{ item.email ? item.email : "" }}
+                          </v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
                     </template>
@@ -107,7 +130,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        clearable
+                          clearable
                           v-model="form.startingDate"
                           prepend-inner-icon="mdi-calendar"
                           hint="(Ex: 2022-03-19 03:37 am)"
@@ -119,19 +142,9 @@
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="form.startingDate"
-                        no-title
-                        scrollable
-                      >
+                      <v-date-picker v-model="form.startingDate" no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="menu = false"
-                        >
-                          Cancel
-                        </v-btn>
+                        <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
                         <v-btn
                           text
                           color="primary"
@@ -154,7 +167,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        clearable
+                          clearable
                           v-model="form.startTime"
                           prepend-inner-icon="mdi-clock-outline"
                           :disabled="form.startingDate === null"
@@ -167,11 +180,7 @@
                       </template>
                       <v-time-picker v-model="form.startTime" no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="startTimeMenu = false"
-                        >
+                        <v-btn text color="primary" @click="startTimeMenu = false">
                           Cancel
                         </v-btn>
                         <v-btn
@@ -200,7 +209,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        clearable
+                          clearable
                           v-model="form.endingDate"
                           prepend-inner-icon="mdi-calendar"
                           hint="(Ex: 2022-03-19 03:37 am)"
@@ -213,13 +222,14 @@
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker :min="minEndDate" v-model="form.endingDate" no-title scrollable>
+                      <v-date-picker
+                        :min="minEndDate"
+                        v-model="form.endingDate"
+                        no-title
+                        scrollable
+                      >
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="menu2 = false"
-                        >
+                        <v-btn text color="primary" @click="menu2 = false">
                           Cancel
                         </v-btn>
                         <v-btn
@@ -244,7 +254,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        clearable
+                          clearable
                           v-model="form.endTime"
                           prepend-inner-icon="mdi-clock-outline"
                           readonly
@@ -257,11 +267,7 @@
                       </template>
                       <v-time-picker v-model="form.endTime" no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="endTimeMenu = false"
-                        >
+                        <v-btn text color="primary" @click="endTimeMenu = false">
                           Cancel
                         </v-btn>
                         <v-btn
@@ -316,7 +322,9 @@
 import common from '../../mixins/common'
 import vehicles from '../../mixins/vehicles'
 import validation from '../../services/validation'
+import VehicleItem from '../common/VehicleItem.vue'
 export default {
+  components: { VehicleItem },
   name: 'VehicleAssingmentForms',
   props: ['form'],
   mixins: [common, vehicles],

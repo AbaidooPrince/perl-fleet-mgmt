@@ -10,6 +10,7 @@ export default {
     vehicleSpecifications: {},
     allStatus: [],
     allVehicleTypes: [],
+    typesPagination: {},
     vehicleType: {},
     allFuelTypes: [],
     fuelType: {},
@@ -68,6 +69,9 @@ export default {
     },
     SET_INSPECTION_PAGINATION (state, data) {
       state.inspectionPagination = data
+    },
+    SET_TYPES_PAGINATION (state, data) {
+      state.typesPagination = data
     }
   },
   getters: {
@@ -155,11 +159,16 @@ export default {
       }
     },
     // vehicle types actions
-    async getVehicleTypes ({ commit }) {
+    async getVehicleTypes ({ commit }, data) {
       try {
-        const response = await Api().get('/vehicles/types')
+        const response = await Api().get(`/vehicles/types/${data.page}`)
         if (response.data.message === 'success') {
-          commit('SET_ALL_VEHICLE_TYPES', response.data.types)
+          commit('SET_ALL_VEHICLE_TYPES', response.data.types.data)
+          commit('SET_TYPES_PAGINATION', {
+            firstPage: response.data.types.firstPage,
+            lastPage: response.data.types.lastPage,
+            currentPage: response.data.types.currentPage
+          })
           return 'success'
         }
       } catch (e) {

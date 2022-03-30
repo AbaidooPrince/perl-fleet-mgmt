@@ -70,7 +70,9 @@ export default {
     async logUserIn ({ commit }, data) {
       try {
         const response = await Api().post('/login', data)
-        if (response.data.message === 'success') {
+        if (response.data.message !== 'success') {
+          return response.data.message
+        } else if (response.data.message === 'success') {
           setAuthToken(response.data.token)
           commit('SET_USER_ID', response.data.user.id)
           commit('SET_USER_TYPE', response.data.user.UserType)
