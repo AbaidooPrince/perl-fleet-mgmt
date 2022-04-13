@@ -14,7 +14,7 @@
   hide-default-footer
     v-model="selected"
     :headers="headers"
-    :items="allGroups"
+    :items="allRoles"
     :single-select="singleSelect"
     item-key="name"
     show-select
@@ -112,9 +112,10 @@ export default {
       formDialog: false,
       // eslint-disable-next-line no-undef
       roleForm: new Form({
+        name: 'Fleet Manager',
+        description: '',
         id: '',
-        roleName: '',
-        actions: [
+        permissions: [
           {
             name: 'Vehicle Entries',
             read: true,
@@ -166,7 +167,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Usage', value: '' },
+        { text: 'Usage', value: 'description' },
         { text: '', value: 'id', align: 'end' }
       ],
       vehicleStatus: [
@@ -178,9 +179,9 @@ export default {
     saveOption () {
       if (!this.$refs.roleForm.validate()) return
       if (this.editMode) {
-        this.updateGroup()
+        this.updateRole()
       } else {
-        this.addGroup()
+        this.addRole()
       }
     },
     action (item, action) {
@@ -193,7 +194,7 @@ export default {
         this.roleForm.fill(data)
         this.formDialog = true
       } else {
-        this.deleteGroup(item)
+        this.deleteRole(item)
         // this.deleteItem = item
         // this.deleteDialog = true
       }
@@ -206,38 +207,38 @@ export default {
       this.formDialog = true
       this.$refs.roleForm.reset()
     },
-    async deleteGroup (data) {
-      const response = this.$store.dispatch('users/deleteGroup', data)
+    async deleteRole (data) {
+      const response = this.$store.dispatch('users/deleteRole', data)
       if (response === 'success') {
-        this.$store.dispatch('showSnackBar', { message: 'Group deleted successfully', error: false })
+        this.$store.dispatch('showSnackBar', { message: 'Role deleted successfully', error: false })
       }
     },
-    async updateGroup () {
+    async updateRole () {
       try {
-        const response = await this.$store.dispatch('users/updateGroup', this.roleForm)
+        const response = await this.$store.dispatch('users/updateRole', this.roleForm)
         if (response === 'success') {
-          this.$store.dispatch('showSnackBar', { message: 'Group updated successfully!', error: false })
+          this.$store.dispatch('showSnackBar', { message: 'Role updated successfully!', error: false })
           this.formDialog = false
         }
       } catch (e) {
 
       }
     },
-    async addGroup () {
+    async addRole () {
       try {
-        const response = await this.$store.dispatch('users/addGroup', this.roleForm)
+        const response = await this.$store.dispatch('users/addRole', this.roleForm)
         if (response === 'success') {
-          this.$store.dispatch('showSnackBar', { message: 'Group added successfully!', error: false })
+          this.$store.dispatch('showSnackBar', { message: 'Role added successfully!', error: false })
           this.formDialog = false
         }
       } catch (e) {
 
       }
     },
-    async getAllGroups () {
+    async getAllRoles () {
       this.loading = true
       try {
-        const response = await this.$store.dispatch('users/getAllGroups')
+        const response = await this.$store.dispatch('users/getAllRoles', { page: 1 })
         if (response === 'success') {
           this.loading = false
         }
@@ -247,14 +248,14 @@ export default {
     }
   },
   computed: {
-    allGroups: {
+    allRoles: {
       get () {
-        return this.$store.state.users.allGroups
+        return this.$store.state.users.allRoles
       }
     }
   },
   created () {
-    this.getAllGroups()
+    this.getAllRoles()
   }
 
 }

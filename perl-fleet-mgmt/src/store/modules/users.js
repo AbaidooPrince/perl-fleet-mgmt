@@ -6,6 +6,8 @@ export default {
     usersPagination: {},
     users: [],
     user: {},
+    allRoles: [],
+    role: {},
     allGroups: [],
     allOperators: [],
     operatorsPagination: {}
@@ -36,6 +38,12 @@ export default {
   mutations: {
     SET_USERS_PAGINATION (state, data) {
       state.usersPagination = data
+    },
+    SET_ROLES (state, data) {
+      state.allRoles = data
+    },
+    SET_ROLE (state, data) {
+      state.role = data
     },
     SET_USERS (state, data) {
       state.users = data
@@ -107,11 +115,59 @@ export default {
         return e.response.data
       }
     },
+    async deleteRole ({ dispatch }, data) {
+      try {
+        const response = await Api().delete(`/users/group/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllRoles', { page: 1 })
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
     async getAllGroups ({ commit }) {
       try {
         const response = await Api().get('/users/groups')
         if (response.data.message === 'success') {
           commit('SET_GROUPS', response.data.groups)
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    // /users/roles
+    async addRole ({ dispatch }, data) {
+      try {
+        const response = await Api().post('/users/role', data)
+        if (response.data.message === 'success') {
+          dispatch('getAllRoles', { page: 1 })
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
+    async updateRole ({ dispatch }, data) {
+      try {
+        const response = await Api().put(`/users/role/${data.id}`, data)
+        if (response.data.message === 'success') {
+          dispatch('getAllRoles', { page: 1 })
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+        return 'error'
+      }
+    },
+    async getAllRoles ({ commit }, data) {
+      try {
+        const response = await Api().get(`/users/roles/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_ROLES', response.data.roles.data)
           return 'success'
         }
       } catch (e) {

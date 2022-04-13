@@ -4,7 +4,7 @@
       <v-row justify="center" align="center">
         <v-col cols="12" md="12" class="pa-0">
           <v-card class="pa-4">
-            <v-card-title class="pt-0">New Role
+            <v-card-title class="pt-0">{{ editMode ? 'Edit Role' : 'New Role'}}
               <div class="close ml-auto">
                 <slot name="close"/>
               </div>
@@ -14,11 +14,22 @@
               <v-form ref="groupForm">
               <div>
                 <label>Role Name <strong>*</strong></label>
-                <v-text-field :rules="[required('Group Name')]" dense outlined
-                v-model="form.groupName"
+                <v-text-field :rules="[required('Role Name')]" dense outlined
+                v-model="form.name"
                 :value="form.id"
                 >
                 </v-text-field>
+              </div>
+              <div>
+                <v-textarea
+                outlined
+                placeholder="Description"
+                dense
+                row="2"
+                v-model="form.description"
+                >
+
+                </v-textarea>
               </div>
               <div>
                 <v-switch inset class="mt-0" label="Default role for new users" dense
@@ -29,7 +40,7 @@
               <v-data-table
               hide-default-footer
                 :headers="headers"
-                :items="form.actions"
+                :items="form.permissions"
                 select-all
               >
               <template v-slot:[`item.read`]="{ item }">
