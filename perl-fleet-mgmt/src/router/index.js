@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import admin from './admin'
 import vehicles from './vehicles'
 import users from './users'
+import inspections from './inspections'
+import { isAdmin, isLoggedIn, isRegular } from '../services/auth'
 
 Vue.use(VueRouter)
 
@@ -38,6 +40,22 @@ const index = [
     component: () => import(/* webpackChunkName: "about" */ '../views/auth/Verification.vue')
   },
   {
+    path: '/page-not-found',
+    name: '404',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/error/404.vue')
+  },
+  {
+    path: '/unauthorized',
+    name: '403',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/error/403.vue')
+  },
+  {
     path: '/reset-password',
     name: 'PasswordSetting',
     // route level code-splitting
@@ -63,11 +81,44 @@ const index = [
   }
 ]
 
-const routes = index.concat(users, admin, vehicles)
+const routes = index.concat(users, admin, vehicles, inspections)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+// before each router hook
+router.beforeEach((to, from, next) => {
+  console.log(isRegular())
+  if (to.meta.layout && to.meta.layout === 'user' && isLoggedIn()) {
+    if (isAdmin() || isRegular()) {
+      console.log('running')
+      next()
+    } else {
+      next({
+        name: '403',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else if (to.meta.layout && to.meta.layout === 'admin' && isLoggedIn()) {
+    if (isAdmin()) {
+      next()
+    } else {
+      next({
+        name: '403',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else if (!to.name) {
+    next({
+      name: '404',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    console.log('running')
+    next()
+  }
 })
 Vue.nextTick(() => {
   document.title = process.env.VUE_APP_APP_TITLE

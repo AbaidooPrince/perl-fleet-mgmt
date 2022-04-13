@@ -53,10 +53,21 @@ export default {
       state.vehicleModel = data
     },
     SET_VEHICLE_DETAILS (state, data) {
-      state.vehicleDetails = data
+      state.vehicleDetails = {
+        // ...state.vehicle.VehicleIdentification
+        id: data.id,
+        name: data.name,
+        vin: data.vin,
+        licensePlate: data.licensePlate,
+        vehicleTypeId: data.vehicleTypeId,
+        vehicleModelId: data.vehicleModel,
+        trim: data.trim,
+        registrationRegion: data.registrationRegion,
+        photo: data.photo
+      }
     },
     SET_VEHICLE_SPECIFICATIONS (state, data) {
-      state.vehicleSpecification = data
+      state.vehicleSpecifications = data
     },
     SET_VEHICLE_ASSIGNMENTS (state, data) {
       state.allVehicleAssignments = data
@@ -78,20 +89,20 @@ export default {
     vehicleIdentification: state => {
       return {
         // ...state.vehicle.VehicleIdentification
-        id: state.vehicleDetails.id,
-        name: state.vehicleDetails.name,
-        vin: state.vehicleDetails.vin,
-        licensePlate: state.vehicleDetails.licensePlate,
-        vehicleTypeId: state.vehicleDetails.vehicleTypeId,
-        vehicleModelId: state.vehicleDetails.vehicleModel,
-        trim: state.vehicleDetails.trim,
-        registrationRegion: state.vehicleDetails.registrationRegion,
-        photo: state.vehicleDetails.photo
+        id: state.vehicle.id,
+        name: state.vehicle.name,
+        vin: state.vehicle.vin,
+        licensePlate: state.vehicle.licensePlate,
+        vehicleTypeId: state.vehicle.vehicleTypeId,
+        vehicleModelId: state.vehicle.vehicleModel,
+        trim: state.vehicle.trim,
+        registrationRegion: state.vehicle.registrationRegion,
+        photo: state.vehicle.photo
       }
     },
     vehicleClassification: state => {
       return {
-        ...state.vehicleDetails.VehicleClassification
+        ...state.vehicle.VehicleClassification
         // vehicleStatusId: state.vehicle.vehicleStatusId,
         // groupId: state.vehicle.groupId,
         // operatorAccountId: state.vehicle.operatorAccountId,
@@ -100,12 +111,24 @@ export default {
     },
     vehicleAdditionalInfo: state => {
       return {
-        ...state.vehicleDetails.VehicleAdditionalDetail
+        ...state.vehicle.VehicleAdditionalDetail
         // color: state.vehicle.color,
         // bodyType: state.vehicle.bodyType,
         // bodySubType: state.vehicle.bodySubType,
         // msrp: state.vehicle.msrp,
         // linkedVehicles: state.vehicle.linkedVehicles
+      }
+    },
+    vehicleDimensions: state => {
+      return {
+        width: state.vehicleSpecifications.width,
+        height: state.vehicleSpecifications.height,
+        length: state.vehicleSpecifications.length,
+        interiorVolume: state.vehicleSpecifications.interiorVolume,
+        passengerVolume: state.vehicleSpecifications.passengerVolume,
+        cargoVolume: state.vehicleSpecifications.cargoVolume,
+        groudClearance: state.vehicleSpecifications.groudClearance,
+        bedLength: state.vehicleSpecifications.bedLength
       }
     }
   },
@@ -190,7 +213,7 @@ export default {
       try {
         const response = await Api().post('/vehicles/type', data)
         if (response.data.message === 'success') {
-          dispatch('getVehicleTypes')
+          dispatch('getVehicleTypes', { page: 1 })
           return response.data.type[0]
         }
       } catch (e) {
@@ -334,37 +357,6 @@ export default {
         return e.response.data
       }
     },
-    // vehicle inspections Actions
-    async getAllInspections ({ commit }, data) {
-      console.log(data)
-      try {
-        const response = await Api().get(`/vehicles/inspections/${data.page}`)
-        if (response.data.message === 'success') {
-          commit('SET_ALL_INSPECTIONS', response.data.inspections.data)
-          commit('SET_INSPECTION_PAGINATION', {
-            firstPage: response.data.inspections.firstPage,
-            lastPage: response.data.inspections.lastPage,
-            currentPage: response.data.inspections.currentPage
-          })
-          return 'success'
-        }
-      } catch (e) {
-        return e.response.data
-      }
-    },
-    async addInspection ({ dispatch }, data) {
-      try {
-        const response = await Api().post('/vehicles/inspection', data)
-        if (response.data.message === 'success') {
-          // commit('EDIT_MODE', true)
-          dispatch('getAllInspections', { page: 1 })
-          return { message: 'success', id: response.data.inspection.id }
-        }
-      } catch (e) {
-        console.log(e)
-        return 'error'
-      }
-    },
     // vehicle Assignment Actions
     async getAllVehicleAssignments ({ commit }, data) {
       try {
@@ -402,6 +394,8 @@ export default {
         const response = await Api().get(`/vehicles/vehicle/${id}`)
         if (response.data.message === 'success') {
           commit('SET_VEHICLE', response.data.vehicle)
+          commit('SET_VEHICLE_DETAILS', response.data.vehicle)
+          commit('SET_VEHICLE_SPECIFICATIONS', response.data.vehicle.VehicleSpecification)
           return 'success'
         }
       } catch (e) {
@@ -436,6 +430,54 @@ export default {
         return e.response.data
       }
     },
+    async getAllUnassignedVehicles ({ commit }, data) {
+      try {
+        const response = await Api().get(`/vehicles/vehicles/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_VEHICLES', response.data.vehicles.data)
+          commit('SET_VEHICLES_PAGINATION', {
+            firstPage: response.data.vehicles.firstPage,
+            lastPage: response.data.vehicles.lastPage,
+            currentPage: response.data.vehicles.currentPage
+          })
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async getAllAssignedVehicles ({ commit }, data) {
+      try {
+        const response = await Api().get(`/vehicles/vehicles/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_VEHICLES', response.data.vehicles.data)
+          commit('SET_VEHICLES_PAGINATION', {
+            firstPage: response.data.vehicles.firstPage,
+            lastPage: response.data.vehicles.lastPage,
+            currentPage: response.data.vehicles.currentPage
+          })
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async getAllArchivedVehicles ({ commit }, data) {
+      try {
+        const response = await Api().get(`/vehicles/archive/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_VEHICLES', response.data.vehicles.data)
+          commit('SET_VEHICLES_PAGINATION', {
+            firstPage: response.data.vehicles.firstPage,
+            lastPage: response.data.vehicles.lastPage,
+            currentPage: response.data.vehicles.currentPage
+          })
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
     async addVehicleDetails ({ commit }, data) {
       try {
         const response = await Api().post('vehicles/vehicle-details', data)
@@ -451,7 +493,7 @@ export default {
     },
     async updateVehicleDetails ({ commit, rootState }, data) {
       try {
-        const response = await Api().put(`vehicles/vehicle-details/${rootState.vehicles.vehicleDetails.id}`, data)
+        const response = await Api().put(`vehicles/vehicle-details/${rootState.vehicles.vehicle.id}`, data)
         if (response.data.message === 'success') {
           commit('EDIT_MODE', true)
           return 'success'

@@ -4,7 +4,7 @@ import axios from 'axios'
 import * as Cookies from 'js-cookie'
 // import api from './api'
 
-const AUTH_TOKEN_KEY = 'authToken'
+const AUTH_TOKEN_KEY = 'fleetAuthToken'
 // const SET_CURRENT_USER = 'currentUser'
 export function setUserSession () {
   const jwt = store.state.authentication.authToken
@@ -18,17 +18,24 @@ export function isLoggedIn () {
 export function isAdmin () {
   if (isLoggedIn()) {
     const role = store.state.authentication.userType.name
+    return role === 'administrator' || role === 'superAdmin'
+  } else return false
+}
+// super admin
+export function isSuperAdmin () {
+  if (isLoggedIn()) {
+    const role = store.state.authentication.userType.name
     return role === 'administrator'
   } else return false
 }
-// owner
+// regular
 export function isRegular () {
   if (isLoggedIn()) {
     const role = store.state.authentication.userRole
     return role === 'regularUser'
   } else return false
 }
-// teller
+// Non user
 export function isNonUser () {
   if (isLoggedIn()) {
     const role = store.state.authentication.userRole

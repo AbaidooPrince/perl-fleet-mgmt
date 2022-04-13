@@ -19,6 +19,60 @@ export default [
     }
   },
   {
+    path: '/:userRouteID/unassigned-vehicles',
+    name: 'UnassignedVehicles',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/vehicles/UnassignedVehicles.vue'),
+    meta: {
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllUnassignedVehicles',
+        vehicleType: true,
+        vehicleGroup: true,
+        vehicleStatus: true
+      }
+    }
+  },
+  {
+    path: '/:userRouteID/assigned-vehicles',
+    name: 'AssignedVehicles',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/vehicles/VehicleList.vue'),
+    meta: {
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllAssignedVehicles',
+        vehicleType: true,
+        vehicleGroup: true,
+        vehicleStatus: true
+      }
+    }
+  },
+  {
+    path: '/:userRouteID/archived-vehicles',
+    name: 'ArchivedVehicles',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/vehicles/ArchivedVehiclesList.vue'),
+    meta: {
+      layout: 'user',
+      filter: {
+        dispatch: 'getAllArchivedVehicles',
+        vehicleType: true,
+        vehicleGroup: true,
+        vehicleStatus: true
+      }
+    }
+  },
+  {
     path: '/:userRouteID/vehicles/assignments',
     name: 'VehicleAssignmentList',
     props: true,
@@ -52,7 +106,9 @@ export default [
       {
         path: '',
         name: 'NewVehicle',
-        props: true,
+        props: {
+          editMode: false
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.

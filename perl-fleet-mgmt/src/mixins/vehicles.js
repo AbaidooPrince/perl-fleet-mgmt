@@ -32,6 +32,12 @@ export default {
         return name[0].name
       }
     },
+    getVehicleModel (id) {
+      const name = this.vehicleModels.filter(type => type.id === id)
+      if (name.length) {
+        return name[0].name
+      }
+    },
     getVehicleStatus (id) {
       return this.vehicleStatus.filter(status => status.id === id)[0]
     }
@@ -45,6 +51,11 @@ export default {
     vehicleTypes: {
       get () {
         return this.$store.state.vehicles.allVehicleTypes
+      }
+    },
+    vehicleModels: {
+      get () {
+        return this.$store.state.vehicles.allVehicleModels
       }
     },
     vehicleStatus: {

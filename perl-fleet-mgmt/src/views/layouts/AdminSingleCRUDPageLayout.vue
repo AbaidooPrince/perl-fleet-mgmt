@@ -2,13 +2,13 @@
   <div>
     <v-container>
       <v-row justify="center" align="center" class="mt-md-4">
-        <v-col cols="12" md="4">
+        <v-col cols="12" :md="md ? md : '4'">
           <h3 class="mb-0 font-weight-bold">{{ title ? title : '' }}</h3>
         </v-col>
-        <v-col cols="12" md="4" class="justify-end text-right">
-          <v-btn @click="addAction" depressed color="success">
+        <v-col cols="12" :md="md ? md : '4'" class="justify-end text-right">
+          <v-btn v-if="title" @click="addAction" depressed color="success">
             <v-icon left>mdi-plus</v-icon>
-            Add {{ title ? title : '' }}
+            {{ title ? `Add ${title}` : '' }}
           </v-btn>
         </v-col>
       </v-row>
@@ -22,7 +22,7 @@
 <script>
 export default {
   name: 'SingleCRUDPageLayout',
-  props: ['title'],
+  props: ['title', 'md'],
   methods: {
     addAction () {
       this.$emit('add-action')

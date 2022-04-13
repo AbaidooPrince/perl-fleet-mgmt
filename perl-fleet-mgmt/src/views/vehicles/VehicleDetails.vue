@@ -1,6 +1,7 @@
 <template>
   <div>
-    <identification :form="identificationForm"></identification>
+    <identification
+      @set-file-url="setFile" :form="identificationForm"></identification>
     <classification :form="classificationForm"></classification>
     <additional-info :form="additionalDetailsForm"></additional-info>
 
@@ -70,6 +71,16 @@ export default {
     }
   },
   computed: {
+    canLeaveRoute: {
+      get () {
+        return this.$store.state.canLeaveRoute
+      }
+    },
+    formEditMode: {
+      get () {
+        return this.$store.state.formEditMode
+      }
+    },
     ...mapGetters(
       { vehicleIdentification: 'vehicles/vehicleIdentification' }
     ),
@@ -81,6 +92,14 @@ export default {
     )
   },
   watch: {
+    identificationForm: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          console.log('cant')
+          this.$store.commit('CAN_LEAVE_ROUTE', false)
+        }
+      }
+    },
     saving (val) {
       // console.log('new val', val)
       if (val === true) {
@@ -94,12 +113,16 @@ export default {
     }
   },
   methods: {
+    setFile (e) {
+      this.identificationForm.photo = e
+    },
     fillForm () {
       this.identificationForm.fill(this.vehicleIdentification)
       this.classificationForm.fill(this.vehicleClassification)
       this.additionalDetailsForm.fill(this.vehicleAdditionalInfo)
     },
     fillOption () {
+      this.$store.commit('CAN_LEAVE_ROUTE', false)
       if (this.editMode) {
         this.fillForm()
       }
@@ -119,6 +142,7 @@ export default {
         // this.$store.commit('vehicles/SET_VEHICLE_DETAILS', response.data.vehicle)
         this.$store.commit('EDIT_MODE', true)
         this.$store.commit('TRIGGER_SAVE', false)
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
         this.$store.dispatch('showSnackBar', { error: false, message: 'Vehicle added successfully!' })
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
       } else if (response === 'error') {
@@ -146,6 +170,7 @@ export default {
       if (response === 'success') {
         this.processing = false
         this.$store.commit('TRIGGER_UPDATE', false)
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
         this.$store.dispatch('showSnackBar', { error: false, message: 'Vehicle updated successfully!' })
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
       } else if (response === 'error') {
@@ -166,6 +191,18 @@ export default {
       // Fire.$on('add-vehicle', () => {
       //   alert('save')
       // })
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if ((!this.canLeaveRoute)) {
+      const answer = window.confirm('Do you really want to leave? You might have unsaved changes!')
+      if (!answer) return false
+      if (answer) {
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
+        next()
+      }
+    } else {
+      next()
     }
   },
   created () {

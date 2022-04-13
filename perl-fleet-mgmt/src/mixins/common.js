@@ -48,6 +48,9 @@ export default {
     getUser (id) {
       return this.allUsers?.filter((user) => user.id === id)[0]
     },
+    getOperator (id) {
+      return this.allOperators?.filter((user) => user.id === id)[0]
+    },
     addnewItem (name, store, dispatch) {
       this.$store.dispatch(`${store}/${dispatch}`, name)
       // const length = this.$store.state.users[`${store}`].length
@@ -125,5 +128,8 @@ export default {
         return this.$store.state.vehicles.allStatus
       }
     }
+  },
+  created () {
+    this.$store.dispatch('users/getAllOperators', { page: 1 })
   }
 }

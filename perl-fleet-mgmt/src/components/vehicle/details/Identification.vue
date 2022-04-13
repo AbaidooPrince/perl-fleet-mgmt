@@ -145,17 +145,23 @@
           <label>Photo</label>
           <!-- <v-row>
             <v-col cols="12" md="6" class=""> -->
-          <v-file-input
+          <input
           id="fileInput"
             v-show="false"
+            @change="uploadToServer"
             accept="image/*"
             label="File input"
-          >
-          </v-file-input>
-            <div class="image-area no-image" align="center">
-          <v-btn @click="triggerUpload" x-small depressed color="success" class="mt-8">Pick file
+            type="file"
+          />
+            <div :class="form.photo !== null ? '' : 'no-image' " class="image-area" align="center">
+          <v-btn v-if="form.photo === null" @click="triggerUpload" x-small depressed color="success" class="mt-8">Pick file
           </v-btn>
-              <v-img></v-img>
+              <v-img :lazy-src="form.photo" class="rounded-lg" height="100%" v-if="form.photo || uploading" :src="form.photo" >
+                <template v-slot:placeholder>
+                  <v-progress-circular color="primary" :loading="uploading" intermediate>
+                  </v-progress-circular>
+                </template>
+              </v-img>
             </div>
           <!-- <v-btn @click="triggerUpload" small depressed color="success">Pick file
           </v-btn> -->
@@ -181,12 +187,42 @@ export default {
   mixins: [common, vehicles],
   data () {
     return {
+      uploading: false,
       ...validation,
       checkingVehicle: false,
       vehicleNameExist: null
     }
   },
   methods: {
+    async uploadToServer (e) {
+      this.uploading = true
+      // var fileInput = document.getElementById('fileInput')
+      var fileList = e.target.files[0]
+      console.log('fileInpue', fileList)
+      // this.uploadProgress = truedispatch
+      // for (var i = 0; i < fileList.length; ++i) {
+      const form = new FormData()
+      form.append('file', fileList)
+      const response = await this.$store.dispatch('uploadFile', form)
+      if (response) {
+        this.$emit('set-file-url', response)
+        this.uploading = false
+      }
+      console.log(response)
+      // this.upload = true;
+      // this.uploading = true;
+      // this.$store.dispatch('uploadFile', form).then((response) => {
+      //   if (response.data.message === 'Uploaded') {
+      //   //
+      //   }
+      // }).catch(() => {
+
+      // })
+      // if (i === (fileList.length - 1)) {
+      //   this.uploading = false
+      // }
+      // }
+    },
     addnewItems (name, store, dispatch) {
       this.$store.dispatch(`${store}/${dispatch}`, name)
       // const length = this.$store.state.users[`${store}`].length

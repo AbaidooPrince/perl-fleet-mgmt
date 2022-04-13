@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
+import Api from '../services/api'
 import authentication from './modules/authentication'
 import users from './modules/users'
 import vehicles from './modules/vehicles'
+import inspections from './modules/inspections'
 
 Vue.use(Vuex)
 
@@ -12,6 +14,7 @@ export default new Vuex.Store({
     storage: window.sessionStorage
   })],
   state: {
+    canLeaveRoute: true,
     snackbar: false,
     snackBarText: '',
     error: false,
@@ -30,6 +33,9 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    CAN_LEAVE_ROUTE (state, data) {
+      state.canLeaveRoute = data
+    },
     RESET_MODE (state) {
       state.save = false
       state.update = false
@@ -59,6 +65,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async uploadFile ({ commit }, data) {
+      try {
+        const response = await Api().post('/upload-file', data)
+        if (response.status === 200) {
+          return response.data
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     showSnackBar ({ commit }, data) {
       commit('SET_SNACKBAR_CONTENT', data.message)
       commit('SET_IS_ERROR', data.error)
@@ -72,7 +88,7 @@ export default new Vuex.Store({
   modules: {
     authentication,
     users,
-    vehicles
-
+    vehicles,
+    inspections
   }
 })

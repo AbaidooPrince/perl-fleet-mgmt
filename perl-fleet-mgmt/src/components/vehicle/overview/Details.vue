@@ -24,7 +24,7 @@
               <div class="text-muted">Group</div>
             </v-col>
             <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.groupId ? vehicle.VehicleClassification.groupId : '' }}</div>
+              <div>{{ vehicle.VehicleClassification.groupId ? getGroup(vehicle.VehicleClassification.groupId)[0].name : '' }}</div>
             </v-col>
           </v-row>
           <v-divider></v-divider>
@@ -42,7 +42,7 @@
               <div class="text-muted">Type</div>
             </v-col>
             <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.vehicleTypeId ? vehicle.vehicleTypeId : '' }}</div>
+              <div>{{ vehicle.vehicleTypeId ? getVehicleType(vehicle.vehicleTypeId) : '' }}</div>
             </v-col>
           </v-row>
           <v-divider></v-divider>
@@ -51,7 +51,7 @@
               <div class="text-muted">Status</div>
             </v-col>
             <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.vehicleStatusId ? vehicle.VehicleClassification.vehicleStatusId : ''}}</div>
+              <div>{{ vehicle.VehicleClassification.vehicleStatusId ? getVehicleStatus(vehicle.VehicleClassification.vehicleStatusId).name : ''}}</div>
             </v-col>
           </v-row>
           <v-divider></v-divider>
@@ -183,8 +183,11 @@
 </template>
 
 <script>
+import common from '../../../mixins/common'
+import vehicles from '../../../mixins/vehicles'
 export default {
   name: 'Details',
+  mixins: [common, vehicles],
   computed: {
     vehicle: {
       get () {

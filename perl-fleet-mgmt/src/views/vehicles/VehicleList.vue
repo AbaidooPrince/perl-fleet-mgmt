@@ -32,7 +32,7 @@
 
     <!-- vehicle name  -->
     <template  class="pl-0" v-slot:[`item.name`]="{ item }">
-      <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
+      <router-link :to="{name: 'Overview', params: {vehicleID:  item.id, userRouteID: userRouteID}}">
       <span class="pr-1">
         <v-avatar size="35" rounded="lg">
           <v-img :src="item.photo ? item.photo : defaultImage"></v-img>
@@ -53,13 +53,15 @@
       <span v-if="getGroup(item.VehicleClassification.groupId).length">{{ getGroup(item.VehicleClassification.groupId)[0].name ? getGroup(item.VehicleClassification.groupId)[0].name : ''  }}</span>
     </template>
     <!-- user classs  -->
-    <template  class="pl-0" v-slot:[`item.employee`]="{ item }">
-      <div class="">
-      <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge>
-      </div>
-      <!-- <div class=""> -->
-      <v-badge color="grey" class="text-dark"  :value="item.operator" :content="item.operator ? 'Operator' : ''"></v-badge>
-      <!-- </div> -->
+    <template  class="pl-0" v-slot:[`item.VehicleClassification.operatorAccountId`]="{ item }">
+      <span v-if="item.VehicleClassification.operatorAccountId !== null">
+        <user-item
+        :user="getOperator(item.VehicleClassification.operatorAccountId)"
+        ></user-item>
+      </span>
+      <span v-else class="text-muted">
+        Unassigned
+      </span>
     </template>
     <!-- getUserType -->
     <template  class="pl-0" v-slot:[`item.vehicleTypeId`]="{ item }">
@@ -114,8 +116,9 @@ import common from '../../mixins/common'
 import users from '../../mixins/user'
 import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
+import UserItem from '../../components/common/UserItem.vue'
 export default {
-  components: { ListPageLayout, VehicleFilterGroup },
+  components: { ListPageLayout, VehicleFilterGroup, UserItem },
   name: 'VehicleList',
   mixins: [common, users, vehicles],
   data () {
@@ -142,8 +145,8 @@ export default {
         { text: 'License Plate', value: 'licensePlate', width: 100 },
         { text: 'Type', value: 'vehicleTypeId' },
         { text: 'Staus', value: 'VehicleClassification.vehicleStatusId' },
-        { text: 'Group', value: 'VehicleClassification.groupId', width: 100 },
-        { text: 'Operator', value: 'VehicleClassification.operatorAccountId', width: 100 },
+        { text: 'Group', value: 'VehicleClassification.groupId' },
+        { text: 'Operator', value: 'VehicleClassification.operatorAccountId', width: 200 },
         { text: 'Year', value: 'year' },
         { text: 'Make', value: 'Make', width: 100 },
         { text: 'Model', value: 'Model', width: 100 },

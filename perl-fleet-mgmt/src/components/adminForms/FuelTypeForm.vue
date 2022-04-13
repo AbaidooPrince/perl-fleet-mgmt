@@ -4,7 +4,7 @@
       <v-row justify="center" align="center">
         <v-col cols="12" md="12" class="pa-0">
           <v-card class="pa-4">
-            <v-card-title class="pt-0">New Vehicle Type
+            <v-card-title class="pt-0">New Fuel Type
               <div class="close ml-auto">
                 <slot name="close"/>
               </div>
@@ -20,7 +20,7 @@
                 </v-text-field>
               </div>
               <div>
-                <v-switch inset class="mt-0" label="Default type for new vehicles" dense
+                <v-switch inset class="mt-0" label="Default type for new fuel" dense
                 v-model="form.default"
                 >
                 </v-switch>

@@ -12,169 +12,21 @@
         <div>
           <v-row>
             <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Name</div>
+              <div class="text-muted">Curb Weight</div>
             </v-col>
             <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.name  ? vehicle.name : ''}}</div>
+              <div>{{ vehicleSpecifications  ? `${vehicleSpecifications.curbWeight} ${units.weight}` : ''}}</div>
             </v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row>
             <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Group</div>
+              <div class="text-muted">Gross Vehicle Weight Rating</div>
             </v-col>
             <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.groupId ? vehicle.VehicleClassification.groupId : '' }}</div>
+              <div>{{ vehicleSpecifications  ? `${vehicleSpecifications.grossVehicleWeight} ${units.length}` : ''}}</div>
             </v-col>
           </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Operator</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.operatorAccountId ? vehicle.VehicleClassification.operatorAccountId : ''}}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Type</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.vehicleTypeId ? vehicle.vehicleTypeId : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Status</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.vehicleStatusId ? vehicle.VehicleClassification.vehicleStatusId : ''}}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">VIN/SN</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.vin ? vehicle.vin : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">License Plate</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{vehicle.licensePlate ? vehicle.licensePlate : ''}} </div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Year</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.year ? vehicle.year : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Make</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>fjkjdsf</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Model</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.vehicleModelId ? vehicle.VehicleClassification.vehicleModelId : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Trim</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.trim ? vehicle.trim : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Registration Region</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.registrationRegion ? vehicle.registrationRegion : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Color</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleAdditionalDetail.color ? vehicle.VehicleAdditionalDetail.color : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Ownership</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleClassification.ownership ? vehicle.VehicleClassification.ownership : ''}}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Body Type</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleAdditionalDetail.bodyType ? vehicle.VehicleAdditionalDetail.bodyType : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">Body Subtype</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleAdditionalDetail.bodySubtype ? vehicle.VehicleAdditionalDetail.bodySubtype : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">MSRP</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>{{ vehicle.VehicleAdditionalDetail.msrp ? vehicle.VehicleAdditionalDetail.msrp : '' }}</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col class="py-0 text-right" cols="6" md="6">
-              <div class="text-muted">
-                <v-icon x-small>mdi-link</v-icon>
-                Linked Vehicles</div>
-            </v-col>
-            <v-col class="py-0 justify-end" cols="6" md="6">
-              <div>fjkjdsf</div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
         </div>
       </v-card-text>
       <v-divider class="mt-0"></v-divider>

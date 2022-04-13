@@ -62,7 +62,7 @@
             </v-list-item>
 
       <!-- roles  -->
-            <v-list-item exact-path dense link>
+            <v-list-item exact-path dense link :to="{name: 'Roles'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>

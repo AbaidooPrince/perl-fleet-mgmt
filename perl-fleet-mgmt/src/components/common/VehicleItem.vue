@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list-item two-line dense v-on="on" v-bind="attrs">
+    <v-list-item two-line dense>
       <v-list-item-avatar>
         <v-img :src="photo ? photo : defaultVehicle"></v-img>
       </v-list-item-avatar>

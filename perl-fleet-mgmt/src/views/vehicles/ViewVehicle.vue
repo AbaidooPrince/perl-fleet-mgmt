@@ -45,19 +45,24 @@
           </div>
           <div class="grey--text small">
             <span>{{ getVehicleType(vehicle.vehicleTypeId) }} </span>
-            <span>. 2018 Toyota Prius</span>
+            <span v-if="vehicle.vin">.{{ getVehicleModel(vehicle.vehicleModelId)}}</span>
             <span v-if="vehicle.vin">. {{ vehicle.vin }}</span>
             <span v-if="vehicle.licensePlate">. {{ vehicle.licensePlate }}</span>
           </div>
-          <div class="d-flex w-auto text-muted">
-            <div class="text-left">
-              Active
+          <div class="d-flex w-50 text-muted">
+            <div class="text-left mr-4">
+              <v-badge inline :color="getVehicleStatus(vehicle.VehicleClassification.vehicleStatusId).color" dot></v-badge>
+              <span>
+              {{ getVehicleStatus(vehicle.VehicleClassification.vehicleStatusId).name}}
+              </span>
+            </div>
+            <div class="mr-4">
+              {{ getGroup(vehicle.VehicleClassification.groupId)[0].name }}
             </div>
             <div>
-              Group
-            </div>
-            <div>
-              operator
+              <router-link :to="{name: 'EditPersonnel', params: { userID: getOperator(vehicle.VehicleClassification.operatorAccountId).id } }">
+              {{ getOperator(vehicle.VehicleClassification.operatorAccountId).firstName }}
+              </router-link>
             </div>
           </div>
         </v-col>

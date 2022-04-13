@@ -14,6 +14,7 @@
       <v-form ref="userForm">
       <v-container class="">
       <basic-details-form
+      @set-file-url="setFile"
       :form="basicDetails"
       ></basic-details-form>
       <user-access-form :role="role" :form="userAccess" />
@@ -40,7 +41,6 @@
     </template>
     <!-- </v-container> -->
     </new-item-page-layout>
-    add new person
   </div>
 </template>
 
@@ -79,6 +79,16 @@ export default {
     }
   },
   computed: {
+    canLeaveRoute: {
+      get () {
+        return this.$store.state.canLeaveRoute
+      }
+    },
+    formEditMode: {
+      get () {
+        return this.$store.state.formEditMode
+      }
+    },
     ...mapGetters(
       { userBasicDetails: 'users/userBasicDetails' }
     ),
@@ -90,6 +100,9 @@ export default {
     }
   },
   methods: {
+    setFile (e) {
+      this.basicDetails.profileImage = e
+    },
     saveOption () {
       if (this.editMode === true) {
         this.updateUser()
@@ -98,12 +111,15 @@ export default {
       }
     },
     fillForm () {
+      this.$store.commit('CAN_LEAVE_ROUTE', false)
       if (this.editMode === true) {
+        this.$store.commit('CAN_LEAVE_ROUTE', false)
         this.basicDetails.fill(this.userBasicDetails)
         this.userAccess.fill(this.userUserAccess)
       }
     },
     cancelAction () {
+      this.$store.commit('CAN_LEAVE_ROUTE', true)
       this.$refs.userForm.reset()
       this.$router.push({ name: 'PersonnelList' })
       // userForm
@@ -152,6 +168,18 @@ export default {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating user!' })
         this.processing = false
       }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (!this.canLeaveRoute && to.name !== 'PersonnelList') {
+      const answer = window.confirm('Do you really want to leave? You might have unsaved changes!')
+      if (!answer) return false
+      if (answer) {
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
+        next()
+      }
+    } else {
+      next()
     }
   },
   mounted () {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-flex>
+      <v-flex md6>
         <v-col cols="12">
         <chart></chart>
         </v-col>

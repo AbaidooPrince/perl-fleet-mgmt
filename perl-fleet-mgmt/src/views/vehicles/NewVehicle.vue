@@ -4,7 +4,7 @@
     listLink="VehicleList"
     listPage="Vehicle"
     :crumb="editMode ? vehicle.name : ''"
-    title="Edit Vehicle"
+    :title="editMode ? 'Edit Vehicle' : 'Add Vehicle'"
     :processing="editMode ? updating: saving"
     @cancel-action="cancelAction"
     @add-action="saveOption"
@@ -109,6 +109,7 @@ export default {
     },
     cancelAction () {
       // this.$refs.userForm.reset()
+      this.$store.commit('CAN_LEAVE_ROUTE', true)
       this.$router.push({ name: 'VehicleList' })
       // userForm
     },
@@ -156,6 +157,11 @@ export default {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating user!' })
         this.processing = false
       }
+    }
+  },
+  async beforeMount () {
+    if (this.vehicle && this.editMode && this.vehicle.id !== this.$route.params.vehicleID) {
+      await this.$store.dispatch('vehicles/getVehicle', this.$route.params.vehicleID)
     }
   },
   beforeDestroy () {

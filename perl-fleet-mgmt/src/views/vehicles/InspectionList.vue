@@ -45,8 +45,8 @@
     </template>
     <!-- vehicle status  -->
     <template  class="pl-0" v-slot:[`item.checkList`]="{ item }">
-      <span v-if="item.checkList !== null">
-        <v-chip x-small v-for="(name, n) in getFailedData(item.checkList)" :key="n+'name'">
+      <span v-if="item.checkList !== null" class="d-inline">
+        <v-chip color="error lighten-2" x-small v-for="(name, n) in getFailedData(item.checkList)" :key="n+'name'">
           {{ name.itemName }}
         </v-chip>
       </span>
@@ -86,7 +86,8 @@
         </v-btn>
       </template>
         <v-list dense>
-          <v-list-item exact-path  v-for="menu in actionItems" :key="menu.id" @click="action(item, menu.name)">
+          <div v-for="menu in actionItems" :key="menu.id">
+          <v-list-item exact-path v-if="menu.isAdmin"   @click="action(item, menu.name)">
             <v-list-item-title class="small">{{ menu.name }}</v-list-item-title>
             <v-list-item-content>
             </v-list-item-content>
@@ -94,6 +95,7 @@
               <v-icon small>{{ menu.icon }}</v-icon>
             </v-list-item-action>
           </v-list-item>
+          </div>
           <v-divider class="my-1"></v-divider>
           <v-list-item @click="deleteUser(item)">
             <v-list-item-title class="small">Archive</v-list-item-title>
@@ -120,6 +122,7 @@ import common from '../../mixins/common'
 import users from '../../mixins/user'
 // import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
+import { isAdmin } from '../../services/auth'
 export default {
   components: { ListPageLayout },
   name: 'InspectionList',
@@ -130,8 +133,8 @@ export default {
       singleSelect: false,
       loading: false,
       actionItems: [
-        { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewInspectionReport' }
-        // { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' }
+        { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewInspectionReport', isAdmin: true },
+        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditInspection', isAdmin: isAdmin }
       ],
       selected: [],
       headers: [
@@ -140,11 +143,11 @@ export default {
           align: 'start',
           sortable: false,
           value: 'Vehicle',
-          width: 250,
-          class: 'pl-0'
+          class: 'pl-0',
+          width: 300
         },
         { text: 'Failed Items', value: 'checkList' },
-        { text: 'Inspected by', value: 'inspectorId', width: 100 },
+        { text: 'Inspected by', value: 'inspectorId' },
         { text: '', value: 'id' }
       ],
       links: [
@@ -156,6 +159,11 @@ export default {
     }
   },
   computed: {
+    inspectionData: {
+      get () {
+        return this.$store.state.inspections.inspectionData
+      }
+    },
     filter: {
       get () {
         return this.$route.meta.filter
@@ -163,7 +171,7 @@ export default {
     },
     allInspections: {
       get () {
-        return this.$store.state.vehicles.allInspections
+        return this.$store.state.inspections.allInspections
       }
     }
   },
@@ -185,9 +193,9 @@ export default {
     },
     async action (data, action) {
       if (action === 'Edit') {
-        const response = await this.$store.dispatch('vehicles/getVehicle', data.id)
+        const response = await this.$store.dispatch('inspections/getVehicleInspectionData', data.id)
         if (response === 'success') {
-          this.$router.push({ name: 'EditVehicleDetails', params: { vehicleID: data.id } })
+          this.$router.push({ name: 'EditInspection', params: { inspectionId: data.id } })
         }
       } else if (action === 'View') {
         this.$router.push({ name: 'ViewInspectionReport', params: { inspectionId: data.id } })
@@ -205,7 +213,7 @@ export default {
     async getAllVehicles () {
       console.log('dispatch', this.filter.dispatch)
       this.loading = true
-      const response = await this.$store.dispatch(`vehicles/${this.filter.dispatch}`, { page: 1 })
+      const response = await this.$store.dispatch(`inspections/${this.filter.dispatch}`, { page: 1 })
       if (response === 'success') {
         this.loading = false
       } else if (response.error) {

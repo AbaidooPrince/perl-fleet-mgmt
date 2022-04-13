@@ -35,7 +35,7 @@
       <router-link :to="{name: 'ViewPersonnel', params: {userID:  item.id, userRouteID: userRouteID}}">
       <span class="pr-1">
         <v-avatar size="35">
-          <v-img :src="item.profileImage ? item.profileImage : defaultImage"></v-img>
+          <v-img :lazy-src="item.profileImage ? item.profileImage : defaultImage" :src="item.profileImage ? item.profileImage : defaultImage"></v-img>
         </v-avatar>
       </span>
       <span class="mt-auto">

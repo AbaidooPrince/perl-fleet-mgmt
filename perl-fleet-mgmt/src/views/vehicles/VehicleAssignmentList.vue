@@ -45,7 +45,9 @@
       <router-link :to="{name: 'Overview', params: {vehicleID:  item.id, userRouteID: userRouteID}}">
       <v-list-item>
         <v-list-item-avatar>
+          <v-avatar class="rounded-lg">
           <v-img :src="item.Vehicle ? item.Vehicle.photo : defaultVehicle"></v-img>
+          </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
@@ -61,12 +63,18 @@
     </template>
     <!-- vehicle status  -->
     <template  class="pl-0" v-slot:[`item.startDate`]="{ item }">
-      {{ item.startDate ? getDateTime(item.startDate) : '' }}
+      {{ item.startDate | fullDateTime }}
+    </template>
+    <!-- vehicle status  -->
+    <template  class="pl-0" v-slot:[`item.endDate`]="{ item }">
+      {{ item.endDate | fullDateTime }}
     </template>
     <!-- user classs  -->
     <template  class="pl-0" v-slot:[`item.operatorAccountId`]="{ item }">
       <div class="">
-        {{ item.operatorAccountId }}
+        <user-item
+        :user="getOperator(item.operatorAccountId)"
+        ></user-item>
       <!-- <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge> -->
       </div>
       <!-- <div class=""> -->
@@ -142,6 +150,7 @@ import users from '../../mixins/user'
 // import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
 import VehicleAssignmentForm from '../../components/vehicle/VehicleAssignmentForm.vue'
+import { format, parseISO } from 'date-fns'
 export default {
   components: { VehicleAssignmentForm },
   name: 'VehicleAssingmentList',
@@ -165,7 +174,7 @@ export default {
       singleSelect: false,
       loading: false,
       tabs: [
-        { name: 'Vehicle List', routeName: 'AssignedVehicles' },
+        { name: 'Vehicle List', routeName: 'VehicleList' },
         { name: 'Vehicle Assignment', routeName: 'VehicleAssignmentList' }
       ],
       actionItems: [
@@ -183,9 +192,9 @@ export default {
           width: 200,
           class: 'pl-0'
         },
-        { text: 'Assignee', value: 'operatorAccountId' },
-        { text: 'Sart Date', value: 'startDate', width: 120 },
-        { text: 'End Date', value: 'endDate' },
+        { text: 'Assignee', value: 'operatorAccountId', width: 'auto' },
+        { text: 'Sart Date', value: 'startDate', width: 170 },
+        { text: 'End Date', value: 'endDate', width: 170 },
         { text: 'Comment', value: 'comment' },
         { text: '', value: 'id' }
       ],
@@ -215,7 +224,11 @@ export default {
     }
   },
   methods: {
+    switchComponent (name) {
+      this.$router.push({ name: name })
+    },
     getDateTime (date) {
+      console.log('date', format(parseISO(date), 'EEE do LLL yyy, hh:mm aaa'))
       return date.toLocaleString()
     },
     triggerDialog () {
@@ -226,9 +239,9 @@ export default {
       this.assignmentForm.endDate = `${this.assignmentForm.endingDate}T${this.assignmentForm.endTime}:00Z`
       console.log('date', this.startDate)
       const response = this.$store.dispatch('vehicles/addVehicleAssignment', this.assignmentForm)
-      if (response === 'success') {
-        this.$store.dispatch('showSnackBar', { message: 'Vehicle Assigned Successfully', error: false })
+      if (response) {
         this.dialog = false
+        this.$store.dispatch('showSnackBar', { message: 'Vehicle Assigned Successfully', error: false })
       }
     },
     getData () {
@@ -237,10 +250,10 @@ export default {
     async action (data, action) {
       if (action === 'Edit') {
         this.assignmentForm.fill(data)
-        // this.assignmentForm.sartingDate = this.assignmentForm.startDate.toLocaleDateString()
-        // this.assignmentForm.endingDate = this.assignmentForm.endingDate.toLocaleDateString()
-        // this.assignmentForm.startTime = this.assignmentForm.startDate.toLocaleTimeString()
-        // this.assignmentForm.endTime = this.assignmentForm.endDate.toLocaleTimeString()
+        this.assignmentForm.startingDate = format(parseISO(this.assignmentForm.startDate), 'yyyy-MM-dd')
+        this.assignmentForm.endingDate = format(parseISO(this.assignmentForm.endDate), 'yyyy-MM-dd')
+        this.assignmentForm.startTime = format(parseISO(this.assignmentForm.startDate), 'hh:mm')
+        this.assignmentForm.endTime = format(parseISO(this.assignmentForm.endDate), 'hh:mm')
         this.dialog = true
         // const response = await this.$store.dispatch('vehicles/getVehicle', data.id)
         // if (response === 'success') {

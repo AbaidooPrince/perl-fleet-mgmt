@@ -3,7 +3,7 @@
     <new-item-page-layout
     listLink="InspectionList"
     listPage="Inspection"
-    :crumb="editMode ? inspection.firstName : ''"
+    :crumb="editMode ? inspectionData.Vehicle.name : ''"
     title="New Inspection"
     :processing="processing"
     @cancel-action="cancelAction"
@@ -37,7 +37,6 @@
     </template>
     <!-- </v-container> -->
     </new-item-page-layout>
-    add new person
   </div>
 </template>
 
@@ -50,7 +49,7 @@ import user from '../../mixins/user'
 import NewItemPageLayout from '../layouts/NewItemPageLayout.vue'
 
 export default {
-  name: 'NewPersonnel',
+  name: 'NewInspection',
   props: ['editMode'],
   mixins: [user],
   components: { NewItemPageLayout, InspectionForm },
@@ -115,9 +114,28 @@ export default {
     }
   },
   computed: {
+    canLeaveRoute: {
+      get () {
+        return this.$store.state.canLeaveRoute
+      }
+    },
+    formEditMode: {
+      get () {
+        return this.$store.state.formEditMode
+      }
+    },
     inspectionData: {
       get () {
-        return this.$store.state.vehicles.inspectionData
+        return this.$store.state.inspections.inspectionData
+      }
+    }
+  },
+  watch: {
+    'inspectionForm.vehicleId': {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.$store.commit('CAN_LEAVE_ROUTE', false)
+        }
       }
     }
   },
@@ -135,6 +153,7 @@ export default {
       }
     },
     cancelAction () {
+      this.$store.commit('CAN_LEAVE_ROUTE', true)
       this.$refs.inspectionForm.reset()
       this.$router.push({ name: 'InspectionList' })
       // inspectionForm
@@ -143,11 +162,12 @@ export default {
       if (!this.$refs.inspectionForm.validate()) return
       this.processing = true
       this.inspectionForm.inspectorId = this.currentUser.id
-      const response = await this.$store.dispatch('vehicles/addInspection', this.inspectionForm)
+      const response = await this.$store.dispatch('inspections/addInspection', this.inspectionForm)
       console.log(response)
       if (response.message === 'success') {
         this.processing = false
-        this.$router.push({ name: 'ViewInspectionReport', params: { inpspectionId: response.id } })
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
+        this.$router.push({ name: 'ViewInspectionReport', params: { inspectionId: response.id } })
         this.$store.dispatch('showSnackBar', { error: false, message: 'Inspection added successfully!' })
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
       } else if (response === 'error') {
@@ -166,6 +186,7 @@ export default {
       console.log(response)
       if (response === 'success') {
         this.processing = false
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
         this.$store.dispatch('showSnackBar', { error: false, message: 'Inspection updated successfully!' })
         this.processing = false
         // this.$router.push({ name: 'UserDashboard', params: { userRouteID: user.computed.userRouteID } })
@@ -177,6 +198,18 @@ export default {
         this.$store.dispatch('showSnackBar', { error: true, message: 'Error updating inspection!' })
         this.processing = false
       }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if ((!this.canLeaveRoute)) {
+      const answer = window.confirm('Do you really want to leave? You might have unsaved changes!')
+      if (!answer) return false
+      if (answer) {
+        this.$store.commit('CAN_LEAVE_ROUTE', true)
+        next()
+      }
+    } else {
+      next()
     }
   },
   mounted () {

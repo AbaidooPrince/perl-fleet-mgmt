@@ -1,7 +1,7 @@
 <template>
   <div>
       <AdminSingleCRUDPageLayout
-      title="Fuel Types"
+      title="Roles"
       @add-action="openForm"
       >
       <template #body>
@@ -14,7 +14,7 @@
   hide-default-footer
     v-model="selected"
     :headers="headers"
-    :items="allFuelTypes"
+    :items="allGroups"
     :single-select="singleSelect"
     item-key="name"
     show-select
@@ -34,10 +34,6 @@
           <custom-pagination></custom-pagination>
           </div>
       </v-container>
-    </template>
-    <template v-slot:[`item.name`]="{ item }" >
-              {{ item.name }}
-              <v-badge :value="item.default" inline color="grey" content="Default"></v-badge>
     </template>
     <template class="table-actions" v-slot:[`item.id`]="{ item }">
     <v-menu offset-y left rounded="lg"
@@ -69,9 +65,10 @@
       </template>
       </AdminSingleCRUDPageLayout>
       <v-dialog v-model="formDialog"
-      width="600"
+      width="700"
       >
-      <fuel-type-form :editMode="editMode" :form="fuelTypeForm">
+      <v-form ref="roleForm">
+        <role-form :editMode="editMode" :form="roleForm">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
               <v-icon>mdi-close</v-icon>
@@ -89,32 +86,71 @@
               </div>
             </div>
           </template>
-      </fuel-type-form>
+        </role-form>
+      </v-form>
       </v-dialog>
+
   </div>
 </template>
 
 <script>
-import FuelTypeForm from '../../../components/adminForms/FuelTypeForm.vue'
-import CustomPagination from '../../../components/common/CustomPagination.vue'
-import common from '../../../mixins/common'
-import validation from '../../../services/validation'
-import AdminSingleCRUDPageLayout from '../../layouts/AdminSingleCRUDPageLayout.vue'
+
+import RoleForm from '../../components/adminForms/RoleForm.vue'
+import CustomPagination from '../../components/common/CustomPagination.vue'
+import validation from '../../services/validation'
+import AdminSingleCRUDPageLayout from '../layouts/AdminSingleCRUDPageLayout.vue'
+// import roles from '../../mixins/roles'
 
 export default {
-  name: 'VehicleTypes',
-  components: { AdminSingleCRUDPageLayout, CustomPagination, FuelTypeForm },
-  mixins: [common],
+  name: 'Roles',
+  // mixins: [roles],
+  components: { AdminSingleCRUDPageLayout, CustomPagination, RoleForm },
   data () {
     return {
       editMode: false,
       ...validation,
       formDialog: false,
       // eslint-disable-next-line no-undef
-      fuelTypeForm: new Form({
+      roleForm: new Form({
         id: '',
-        name: '',
-        default: false
+        roleName: '',
+        actions: [
+          {
+            name: 'Vehicle Entries',
+            read: true,
+            update: true,
+            delete: true,
+            create: true
+          },
+          {
+            name: 'Vehicle Assignment Entries',
+            read: true,
+            update: true,
+            delete: true,
+            create: true
+          },
+          {
+            name: 'Inspection Submissions',
+            read: true,
+            update: false,
+            delete: true,
+            create: true
+          },
+          {
+            name: 'Personnel Entries',
+            read: true,
+            update: true,
+            delete: true,
+            create: true
+          },
+          {
+            name: 'Fuel Entries',
+            read: true,
+            update: true,
+            delete: true,
+            create: true
+          }
+        ]
       }),
       singleSelect: false,
       loading: false,
@@ -133,80 +169,75 @@ export default {
         { text: 'Usage', value: '' },
         { text: '', value: 'id', align: 'end' }
       ],
-      dvehicleStatus: [
+      vehicleStatus: [
         { id: 1, name: 'Active', color: 'success' }
       ]
     }
   },
   methods: {
+    saveOption () {
+      if (!this.$refs.roleForm.validate()) return
+      if (this.editMode) {
+        this.updateGroup()
+      } else {
+        this.addGroup()
+      }
+    },
     action (item, action) {
       if (action === 'Edit') {
+        this.editMode = true
         const data = {
           ...item,
-          statusName: item.name
+          roleName: item.name
         }
-        console.log('item', item)
-        this.editMode = true
-        this.fuelTypeForm.fill(data)
+        this.roleForm.fill(data)
         this.formDialog = true
       } else {
-        this.deleteFuelType(item)
+        this.deleteGroup(item)
         // this.deleteItem = item
         // this.deleteDialog = true
       }
     },
     closeDialog () {
+      this.$refs.roleForm.reset()
       this.formDialog = false
     },
     openForm () {
-      this.fuelTypeForm.reset()
       this.formDialog = true
+      this.$refs.roleForm.reset()
     },
-    saveOption () {
-      if (this.editMode) {
-        this.updateFuelType()
-      } else {
-        this.addFuelType()
-      }
-    },
-    async deleteFuelType (data) {
-      const response = this.$store.dispatch('vehicles/deleteFuelType', data)
+    async deleteGroup (data) {
+      const response = this.$store.dispatch('users/deleteGroup', data)
       if (response === 'success') {
-        this.$store.dispatch('showSnackBar', { message: 'Fuel type deleted successfully', error: false })
+        this.$store.dispatch('showSnackBar', { message: 'Group deleted successfully', error: false })
       }
     },
-    async updateFuelType () {
+    async updateGroup () {
       try {
-        const response = await this.$store.dispatch('vehicles/updateFuelType', this.fuelTypeForm)
+        const response = await this.$store.dispatch('users/updateGroup', this.roleForm)
         if (response === 'success') {
-          this.$store.dispatch('showSnackBar', { message: 'Fuel type updated successfully!', error: false })
+          this.$store.dispatch('showSnackBar', { message: 'Group updated successfully!', error: false })
           this.formDialog = false
-        //   this.$store.dispatch('vehicles/getFuelTypes')
-        } else if (response.error) {
-          this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
         }
       } catch (e) {
 
       }
     },
-    async addFuelType () {
+    async addGroup () {
       try {
-        const response = await this.$store.dispatch('vehicles/addFuelType', this.fuelTypeForm)
+        const response = await this.$store.dispatch('users/addGroup', this.roleForm)
         if (response === 'success') {
-          this.$store.dispatch('showSnackBar', { message: 'Fuel type added successfully!', error: false })
+          this.$store.dispatch('showSnackBar', { message: 'Group added successfully!', error: false })
           this.formDialog = false
-        //   this.$store.dispatch('vehicles/getFuelTypes')
-        } else if (response.error) {
-          this.$store.dispatch('showSnackBar', { message: `${response.error}`, error: true })
         }
       } catch (e) {
 
       }
     },
-    async getFuelTypes () {
+    async getAllGroups () {
       this.loading = true
       try {
-        const response = await this.$store.dispatch('vehicles/getFuelTypes')
+        const response = await this.$store.dispatch('users/getAllGroups')
         if (response === 'success') {
           this.loading = false
         }
@@ -216,15 +247,16 @@ export default {
     }
   },
   computed: {
-    allFuelTypes: {
+    allGroups: {
       get () {
-        return this.$store.state.vehicles.allFuelTypes
+        return this.$store.state.users.allGroups
       }
     }
   },
   created () {
-    this.getFuelTypes()
+    this.getAllGroups()
   }
+
 }
 </script>
 
