@@ -111,7 +111,7 @@ A Regular User is assigned a Role. The Role controls the actions they can take i
                 dense
                 hint="Regular User Roles and their permissions are managed in Account Settings."
                 persistent-hint
-                :items="roles"
+                :items="allRoles"
                 v-model="form.role"
                 item-text="name"
                 item-value="id"
@@ -129,14 +129,15 @@ A Regular User is assigned a Role. The Role controls the actions they can take i
 <script>
 import { isAdmin } from '../../services/auth'
 import validation from '../../services/validation'
+import users from '../../store/modules/users'
 export default {
   name: 'UserAccessForm',
   props: ['form', 'role'],
-  mixins: ['user'],
+  mixins: [users],
   data () {
     return {
       ...validation,
-      roles: [
+      rol: [
         { id: 1, name: 'Fleet Manager' },
         { id: 2, name: 'Operator' },
         { id: 3, name: 'Technician' },
@@ -145,6 +146,11 @@ export default {
     }
   },
   computed: {
+    allRoles: {
+      get () {
+        return this.$store.state.users.allRoles
+      }
+    },
     isAdmin: {
       get () {
         return isAdmin()
