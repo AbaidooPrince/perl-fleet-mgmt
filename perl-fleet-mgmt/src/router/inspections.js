@@ -36,6 +36,20 @@ export default [
     }
   },
   {
+    path: '/:userRouteID/inspection/forms',
+    name: 'InspectionForms',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/vehicles/inspections/InspectionForms.vue'),
+    meta: {
+      layout: 'user',
+      filter: {
+      }
+    }
+  },
+  {
     path: '/:userRouteID/inspections/new',
     name: 'NewInspection',
     props: true,

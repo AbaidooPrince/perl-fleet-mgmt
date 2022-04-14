@@ -66,7 +66,13 @@
         </div>
       </v-col>
       <v-col cols="12" md="3" align-self="center" class="mt-n4">
-        <custom-pagination></custom-pagination>
+        <custom-pagination
+        @get-prev-page-data="getPreviousPageData"
+        @get-next-page-data="getNextPageData"
+        :module="module"
+        :state="state"
+        >
+        </custom-pagination>
       </v-col>
     </v-row>
   </div>
@@ -78,13 +84,21 @@ import vehicles from '../../mixins/vehicles'
 import CustomPagination from './CustomPagination.vue'
 export default {
   components: { CustomPagination },
-  props: ['filter'],
+  props: ['filter', 'module', 'state'],
   name: 'VehicleFilterGroup',
   mixins: [vehicles, common],
   data () {
     return {
       search: '',
       userSatus: ['Active', 'Dormant', 'No Access']
+    }
+  },
+  methods: {
+    getPreviousPageData () {
+      this.$emit('get-prev-page-vehicles')
+    },
+    getNextPageData () {
+      this.$emit('get-next-page-vehicles')
     }
   },
   computed: {

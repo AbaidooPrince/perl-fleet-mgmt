@@ -43,12 +43,20 @@
     <!-- vehicle name  -->
     <template  class="pl-0" v-slot:[`item.vehicleId`]="{ item }">
       <router-link :to="{name: 'Overview', params: {vehicleID:  item.id, userRouteID: userRouteID}}">
-      <v-list-item>
-        <v-list-item-avatar>
-          <v-avatar class="rounded-lg">
+      <span class="pr-1">
+        <v-avatar size="35" rounded="lg">
+          <v-img :src="item.Vehicle.photo ? item.Vehicle.photo : defaultVehicle"></v-img>
+        </v-avatar>
+      </span>
+      <span class="mt-auto">
+      {{  item.Vehicle.name }}
+      </span>
+      </router-link>
+      <!-- <router-link :to="{name: 'Overview', params: {vehicleID:  item.id, userRouteID: userRouteID}}">
+      <v-list-item link>
+          <v-avatar size="35" class="rounded-lg mr-2">
           <v-img :src="item.Vehicle ? item.Vehicle.photo : defaultVehicle"></v-img>
           </v-avatar>
-        </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
       {{  item.Vehicle ? item.Vehicle.name : ''}}
@@ -57,9 +65,7 @@
                         </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-        <!-- <v-avatar size="35">
-        </v-avatar> -->
-      </router-link>
+      </router-link> -->
     </template>
     <!-- vehicle status  -->
     <template  class="pl-0" v-slot:[`item.startDate`]="{ item }">
@@ -74,7 +80,8 @@
       <div class="">
         <user-item
         :user="getOperator(item.operatorAccountId)"
-        ></user-item>
+        >
+        </user-item>
       <!-- <v-badge color="grey" class="text-black" :value="item.employee" :content="item.employee ? 'Employee' : ''"></v-badge> -->
       </div>
       <!-- <div class=""> -->
@@ -189,12 +196,13 @@ export default {
           align: 'start',
           sortable: false,
           value: 'vehicleId',
-          width: 200,
+          width: 300,
           class: 'pl-0'
         },
-        { text: 'Assignee', value: 'operatorAccountId', width: 'auto' },
+        { text: 'Assignee', value: 'operatorAccountId', width: 200 },
         { text: 'Sart Date', value: 'startDate', width: 170 },
         { text: 'End Date', value: 'endDate', width: 170 },
+        { text: 'Task', value: '', width: 170 },
         { text: 'Comment', value: 'comment' },
         { text: '', value: 'id' }
       ],

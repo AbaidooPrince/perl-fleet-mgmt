@@ -94,5 +94,18 @@ export default [
     meta: {
       layout: 'admin'
     }
+  },
+  // ServiceTasks
+  {
+    path: '/:userRouteID/admin/service-tasks',
+    name: 'ServiceTasks',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/ServiceTasks.vue'),
+    meta: {
+      layout: 'admin'
+    }
   }
 ]

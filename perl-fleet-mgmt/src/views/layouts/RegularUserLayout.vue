@@ -170,12 +170,15 @@
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item link>
+            <!-- InspectionForms -->
+            <v-list-item  link
+      exact-active-class="menu-active-class"
+      :to="{ name: 'InspectionForms' }" >
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
           <v-list-item-subtitle>
-            Forms
+            Inspection Forms
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>

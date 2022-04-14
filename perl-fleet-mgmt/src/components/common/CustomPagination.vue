@@ -6,11 +6,11 @@
           </div>
           <div>
         <v-btn-toggle v-model="pagination" mandatory>
-          <v-btn small class="">
+          <v-btn @click="getPreviousPageData" :disabled="!hasPrevious" small class="">
             <v-icon>mdi-chevron-left
             </v-icon>
           </v-btn>
-          <v-btn small>
+          <v-btn @click="getNextPageData" :disabled="!hasNext" small>
             <v-icon>mdi-chevron-right
             </v-icon>
           </v-btn>
@@ -23,9 +23,34 @@
 <script>
 export default {
   name: 'CustomPagination',
+  props: ['module', 'state'],
   data () {
     return {
-      pagination: 1
+      pagination: null
+    }
+  },
+  methods: {
+    getPreviousPageData () {
+      this.$emit('get-prev-page-data')
+    },
+    getNextPageData () {
+      this.$emit('get-next-page-data')
+    }
+  },
+  computed: {
+    paginations: {
+      get () {
+        return this.$store.state[`${this.module}`][`${this.state}`] || null
+      }
+    },
+    noPagination () {
+      return !this.hasNext && !this.hasPrevious
+    },
+    hasNext () {
+      return this.paginations.currentPage !== this.paginations.lastPage
+    },
+    hasPrevious () {
+      return this.paginations.currentPage > this.paginations.firstPage
     }
   }
 }

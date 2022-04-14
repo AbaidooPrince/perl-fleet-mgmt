@@ -58,6 +58,11 @@ export default {
         return this.$store.state.vehicles.allVehicleModels
       }
     },
+    vehiclePagination: {
+      get () {
+        return this.$store.state.vehicles.vehiclePagination
+      }
+    },
     vehicleStatus: {
       get () {
         return this.$store.state.vehicles.allStatus

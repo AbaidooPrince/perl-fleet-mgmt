@@ -131,6 +131,17 @@
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
+
+             <!-- vehicle Models  -->
+            <v-list-item dense link exact-path :to="{name: 'ServiceTasks'}">
+              <v-list-item-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+          <v-list-item-subtitle>
+            Service Tasks
+          </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>

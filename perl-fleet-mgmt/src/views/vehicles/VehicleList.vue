@@ -23,7 +23,12 @@
   >
     <template v-slot:top>
       <v-container class="pt-0 filter-group bg-white pt-3">
-        <vehicle-filter-group></vehicle-filter-group>
+        <vehicle-filter-group
+          @get-prev-page-vehicles="getPreviousPageData"
+          @get-next-page-vehicles="getNextPageData"
+          module="vehicles"
+          state="vehiclePagination"
+        ></vehicle-filter-group>
         <v-row>
         <v-divider class="my-0"></v-divider>
         </v-row>
@@ -70,6 +75,7 @@
       </span>
     </template>
     <template class="table-actions" v-slot:[`item.id`]="{ item }">
+      <div :id="`${item.id}_menu`">
     <v-menu offset-y left rounded="lg"
       transition="slide-x-transition">
       <template v-slot:activator="{ on, attrs }">
@@ -102,6 +108,7 @@
 
         </v-list>
       </v-menu>
+      </div>
     </template>
   </v-data-table>
       </template>
@@ -173,6 +180,33 @@ export default {
     }
   },
   methods: {
+    observe (id) {
+      const newId = '#' + id
+      console.log(newId)
+      const el = document.getElementById('#1_menu')
+      const observer = new window.IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            console.log('ENTER')
+            return
+          }
+          console.log('LEAVE')
+        },
+        {
+          root: null,
+          threshold: 0.1 // set offset 0.1 means trigger if atleast 10% of element in viewport
+        }
+      )
+      observer.observe(el)
+    },
+    getPreviousPageData () {
+      const prevPage = this.vehiclePagination.currentPage - 1
+      this.getAllVehicles(prevPage)
+    },
+    getNextPageData () {
+      const nextPage = this.vehiclePagination.currentPage + 1
+      this.getAllVehicles(nextPage)
+    },
     getData () {
       this.$store.dispatch('vehicles/getAllVehicleModels')
     },
@@ -185,9 +219,9 @@ export default {
       } else if (action === 'View') {
         this.$router.push({ name: 'Overview', params: { vehicleID: data.id } })
       }
-      // else if (action === 'Deactivate User Access') {
-      //   this.deleteUser(data, this.filter.dispatch)
-      // }
+    // else if (action === 'Deactivate User Access') {
+    //   this.deleteUser(data, this.filter.dispatch)
+    // }
     },
     async deleteUser (data) {
       const response = this.$store.dispatch('users/deleteUser', { dispatch: this.filter.dispatch, ...data })
@@ -195,9 +229,10 @@ export default {
         this.$store.dispatch('showSnackBar', { message: 'User deleted successfully', error: false })
       }
     },
-    async getAllVehicles () {
+    async getAllVehicles (page) {
+      const nextPage = page || this.vehiclePagination.currentPage
       this.loading = true
-      const response = await this.$store.dispatch(`vehicles/${this.filter.dispatch}`, { page: 1 })
+      const response = await this.$store.dispatch(`vehicles/${this.filter.dispatch}`, { page: nextPage })
       if (response === 'success') {
         this.loading = false
       } else if (response.error) {
@@ -210,6 +245,7 @@ export default {
     }
   },
   created () {
+    // this.observe('#1_menu')
     this.getAllVehicles()
   }
 
