@@ -84,10 +84,12 @@ export default {
     },
     async updateFile ({ dispatch }, data) {
       try {
-        const response = await api().put(`vehicles/file/${data.id}`, data)
+        const response = await api().put(`vehicles/update-file/${data.id}`, data)
         if (response.data.message === 'success') {
           dispatch('getAllVehicleFiles', { page: 1 })
           return 'success'
+        } else if (response.data.error) {
+          return response.data
         }
       } catch (e) {
         console.log(e)
@@ -98,6 +100,17 @@ export default {
         const response = await api().put(`vehicles/archive-file/${data.id}`)
         if (response.data.message === 'success') {
           dispatch('getAllVehicleFiles', { page: 1 })
+          return 'success'
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async restoreFile ({ dispatch }, data) {
+      try {
+        const response = await api().put(`vehicles/unarchive-file/${data.id}`)
+        if (response.data.message === 'success') {
+          dispatch('getAllArchivedFiles', { page: 1 })
           return 'success'
         }
       } catch (e) {

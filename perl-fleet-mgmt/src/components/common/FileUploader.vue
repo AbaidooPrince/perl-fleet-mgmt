@@ -77,9 +77,9 @@
                     </v-row>
                   </v-card>
                 </div>
-                  <div class="pt-4" align="center">
+                  <!-- <div class="pt-4" align="center">
                     <v-btn @click="changeFile" small text color="primary"> Change File</v-btn>
-                  </div>
+                  </div> -->
         </v-col>
       </v-row>
     </v-container>
@@ -107,6 +107,7 @@ export default {
   computed: {
     vehicleImage () {
       return {
+        id: this.form.id,
         name: this.form.name,
         vehicleId: this.vehicleUpload ? this.vehicle.id : null,
         type: this.type,
@@ -125,6 +126,19 @@ export default {
         this.updateFile()
       } else {
         this.addFile()
+      }
+    },
+    async updateFile () {
+      this.uploading = true
+      const response = await this.$store.dispatch('files/updateFile', this.vehicleImage)
+      if (response === 'success') {
+        this.uploading = false
+        this.$store.dispatch('showSnackBar', { error: false, message: 'File updated successfully!' })
+        this.$emit('close-dialog')
+      } else if (response.error) {
+        this.$store.dispatch('showSnackBar', { error: true, message: `${response.error}` })
+        this.$emit('close-dialog')
+        console.log(response)
       }
     },
     async addFile () {
