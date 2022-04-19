@@ -1,17 +1,5 @@
 <template>
   <div>
-    <v-toolbar flat height="">
-    <div class="w-100">
-    <ul class="line">
-      <li @click="switchComponent(tab.isArchived)" :class="isArchived === tab.isArchived ? 'activeLink' : 'text-muted'" class="list mr-5 defaultLink" v-for="(tab, t) in tabs" :key="t+'ttab'">
-        <label class="mb-0" v-if="tab.admin">
-        {{ tab.name }}
-        </label>
-      </li>
-    </ul>
-    <!-- <v-divider class="mt-0"></v-divider> -->
-    </div>
-    </v-toolbar>
       <AdminSingleCRUDPageLayout
       md="6"
       >
@@ -30,11 +18,11 @@
                   <v-col cols="12" md="3" lg="3" sm="12">
                                         <v-card elevation="0" class="grey lighten-3" outlined height="200">
                       <v-card-text class="h-100" align="center">
-                        <v-btn title="Add new image" block @click="triggerUpload" depressed color="primary" class="mt-12 mr-auto">
+                        <v-btn title="Add new image" block @click="triggerUpload" depressed color="success" class="mt-12 mr-auto">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                         <div>
-                          <small>Add New successImage...</small>
+                          <small>Add New Image...</small>
                         </div>
                       </v-card-text>
                       <input
@@ -65,28 +53,13 @@
             style="height: auto; width: 100%;"
           >
           <div class="d-inline">
-            <div v-if="!isArchived" class="pt-2">
+            <div class="pt-2">
               <div class="text-right">
               <v-icon
               @click="editFile(image)"
               color="white"
               >
                 mdi-pencil-circle
-              </v-icon>
-              <span class="pl-2">
-                <v-icon  @click="archiveFile(image)" color="white">
-                  mdi-delete-circle
-                </v-icon>
-              </span>
-              </div>
-            </div>
-            <div v-else class="pt-2">
-              <div class="text-right">
-              <v-icon
-              @click="editFile(image)"
-              color="white"
-              >
-                mdi-refresh-circle
               </v-icon>
               <span class="pl-2">
                 <v-icon  @click="archiveFile(image)" color="white">
@@ -132,7 +105,6 @@ import vehicles from '../../mixins/vehicles'
 import user from '../../mixins/user'
 import common from '../../mixins/common'
 import FileUploader from '../../components/common/FileUploader.vue'
-import { isAdmin } from '../../services/auth'
 export default {
   components: { AdminSingleCRUDPageLayout, CustomPagination, FileUploader },
   name: 'VehiclePhotos',
@@ -143,10 +115,6 @@ export default {
       dialog: false,
       images: [
         ''
-      ],
-      tabs: [
-        { name: 'All Documents', component: 'VehicleList', admin: isAdmin, isArchived: false },
-        { name: 'Archived', component: 'VehicleAssignmentList', admin: isAdmin, isArchived: true }
       ],
       // eslint-disable-next-line no-undef
       newPhoto: new Form({
@@ -161,13 +129,6 @@ export default {
     }
   },
   methods: {
-    switchComponent (name) {
-      if (name) {
-        this.getAllArchivedDocs()
-      } else {
-        this.getVehiclePhotos()
-      }
-    },
     closeDialog () {
       // this.form.reset()
       this.dialog = false
@@ -182,22 +143,6 @@ export default {
       this.newPhoto.fill(data)
       this.editMode = true
       this.dialog = true
-    },
-    async getAllArchivedDocs () {
-      this.loading = true
-      try {
-        const response = await this.$store.dispatch('files/getAllArchivedFiles', { page: 1 })
-        if (response === 'success') {
-          this.loading = false
-        } else if (response === 'error') {
-          this.$store.dispatch('showSnackBar', { error: true, message: 'Error fetching data. Try again!' })
-          this.loading = false
-        }
-      } catch (e) {
-        this.$store.dispatch('showSnackBar', { error: true, message: 'Error fetching data. Try again!' })
-        this.loading = false
-        console.log(e)
-      }
     },
     async getVehiclePhotos () {
       try {
@@ -223,6 +168,7 @@ export default {
       // var fileInput = document.getElementById('fileInput')
       var fileList = e.target.files[0]
       console.log('fileInpue', fileList)
+
       // this.uploadProgress = truedispatch
       // for (var i = 0; i < fileList.length; ++i) {
       const form = new FormData()
@@ -241,16 +187,6 @@ export default {
     }
   },
   computed: {
-    isActiveTab: {
-      get () {
-        return this.$route.name
-      }
-    },
-    isArchived: {
-      get () {
-        return this.$store.state.files.archivedView
-      }
-    },
     allPhotos: {
       get () {
         return this.$store.state.files.images

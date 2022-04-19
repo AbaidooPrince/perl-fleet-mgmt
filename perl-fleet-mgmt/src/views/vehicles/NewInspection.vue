@@ -61,6 +61,7 @@ export default {
       inspectionForm: new Form({
         vehicleId: null,
         inspectorId: null,
+        formId: null,
         checkList: [
           {
             itemName: 'Brake Inspection',
@@ -114,6 +115,11 @@ export default {
     }
   },
   computed: {
+    selectedForm: {
+      get () {
+        return this.$store.state.inspections.selectedForm
+      }
+    },
     canLeaveRoute: {
       get () {
         return this.$store.state.canLeaveRoute
@@ -150,6 +156,9 @@ export default {
     fillForm () {
       if (this.editMode === true) {
         this.inspectionForm.fill(this.inspectionData)
+      } else {
+        this.inspectionForm.formId = this.selectedForm.id
+        this.inspectionForm.checkList = this.selectedForm.elements
       }
     },
     cancelAction () {

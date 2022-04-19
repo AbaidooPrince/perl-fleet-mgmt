@@ -8,7 +8,7 @@
       <span class="pl-1"><v-icon small :color="(hover || isActiveMenu(menu.routeName)) ? '' : 'grey lighten-1'" class="mb-1">{{ menu.icon }}
         </v-icon> {{menu.name}}
         </span>
-        <span v-if="menu.count" class="ml-auto pr-1">0</span>
+        <span v-if="menu.count" class="ml-auto pr-1">{{ getTotalFiles(menu) }}</span>
       </div>
     </ol>
         </router-link>
@@ -24,13 +24,19 @@ export default {
     return {
       menuLinks: [
         { name: 'Overview', routeName: 'Overview', icon: 'mdi-view-dashboard', count: false },
-        { name: 'Photos', routeName: 'VehiclePhotos', icon: 'mdi-image', count: true, countValue: `${this.allPhotosCount}` },
-        { name: 'Documents', routeName: 'VehicleDocuments', icon: 'mdi-file-document', count: true, countValue: `${this.allPhotosCount}` },
-        { name: 'Commnets', routeName: 'VehicleComments', icon: 'mdi-comment-text', count: true, countValue: `${this.allPhotosCount}` }
+        { name: 'Photos', routeName: 'VehiclePhotos', icon: 'mdi-image', count: true, countValue: 'images' },
+        { name: 'Documents', routeName: 'VehicleDocuments', icon: 'mdi-file-document', count: true, countValue: 'docs' },
+        { name: 'Commnets', routeName: 'VehicleComments', icon: 'mdi-comment-text', count: true, countValue: 'comments' }
       ]
     }
   },
   computed: {
+    totalFiles () {
+      return {
+        images: this.$store.state.files.images.length,
+        docs: this.$store.state.files.documents.length
+      }
+    },
     currentRoute: {
       get () {
         return this.$route.name
@@ -38,6 +44,9 @@ export default {
     }
   },
   methods: {
+    getTotalFiles (item) {
+      return this.totalFiles[`${item.countValue}`] || 0
+    },
     isActiveMenu (route) {
       return route ? route === this.currentRoute : false
     }

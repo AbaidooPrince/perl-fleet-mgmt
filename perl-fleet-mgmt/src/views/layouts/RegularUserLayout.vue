@@ -321,7 +321,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import user from '../../mixins/user'
-import { clearAuthToken, isLoggedIn } from '../../services/auth'
+import { clearAuthToken } from '../../services/auth'
 export default {
   name: 'RegularUserLayout',
   data () {
@@ -356,15 +356,14 @@ export default {
   },
   methods: {
     logout () {
-      if (isLoggedIn()) {
-        this.$store.dispatch('authentication/clearCurrentUser')
-        clearAuthToken()
-        document.cookie = 'authToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
-        this.$router.push({ name: 'Login' })
-        this.$store.dispatch('showSnackBar', { message: 'Logged out successfully!' })
-      } else {
-        this.$router.push({ name: 'Login' })
-      }
+      const store = new Storage()
+      store.clear()
+      sessionStorage.removeItem('vuex')
+      this.$store.dispatch('authentication/clearCurrentUser')
+      clearAuthToken()
+      document.cookie = 'fleetAuthToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+      this.$router.push({ name: 'Login' })
+      this.$store.dispatch('showSnackBar', { message: 'Logged out successfully!' })
     },
     watchResize () {
       // alert(this.$vuetify.breakpoint.width)

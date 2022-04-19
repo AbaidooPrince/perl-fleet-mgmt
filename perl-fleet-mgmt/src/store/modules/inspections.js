@@ -5,10 +5,16 @@ export default {
   state: {
     allInspections: [],
     inspectionPagination: {},
-    inspectionData: {}
+    inspectionData: {},
+    allInspectionForms: [],
+    inspectionForm: {},
+    selectedForm: {}
 
   },
   mutations: {
+    SET_SELECTED_FORM (state, data) {
+      state.selectedForm = data
+    },
     SET_ALL_INSPECTIONS (state, data) {
       state.allInspections = data
     },
@@ -17,6 +23,12 @@ export default {
     },
     SET_INSPECTION_REPORT (state, data) {
       state.inspectionData = data
+    },
+    SET_ALL_INSPECTION_FORMS (state, data) {
+      state.allInspectionForms = data
+    },
+    SET_INSPECTION_FORM (state, data) {
+      state.inspectionForm = data
     }
 
   },
@@ -65,7 +77,52 @@ export default {
         console.log(e)
         return 'error'
       }
+    },
+    // vehicle inspection forms Actions
+    async getAllInspectionForms ({ commit }, data) {
+      console.log(data)
+      try {
+        const response = await Api().get(`/vehicles/forms/${1}`)
+        if (response.data.message === 'success') {
+          commit('SET_ALL_INSPECTION_FORMS', response.data.forms)
+          // commit('SET_INSPECTION_PAGINATION', {
+          //   firstPage: response.data.inspections.firstPage,
+          //   lastPage: response.data.inspections.lastPage,
+          //   currentPage: response.data.inspections.currentPage
+          // })
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async addInspectionForm ({ commit, dispatch }, data) {
+      try {
+        const response = await Api().post('/vehicles/form', data)
+        if (response.data.message === 'success') {
+        // commit('EDIT_MODE', true)
+          commit('SET_INSPECTION_FORM', response.data.inspection)
+          dispatch('getAllInspectionForms', { page: 1 })
+          return { message: 'success', id: response.data.inspection.id }
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
+    },
+    async updateInspectionForm ({ commit, dispatch }, data) {
+      try {
+        const response = await Api().put(`/vehicles/form/${data.id}`, data)
+        if (response.data.message === 'success') {
+        // commit('EDIT_MODE', true)
+          commit('SET_INSPECTION_FORM', response.data.inspection)
+          dispatch('getAllInspectionForms', { page: 1 })
+          return { message: 'success', id: response.data.inspection.id }
+        }
+      } catch (e) {
+        console.log(e)
+        return e.response.data
+      }
     }
-
   }
 }

@@ -3,10 +3,35 @@
     <v-container class="bg-grey" fluid>
       <list-page-layout
       title="Inspection History"
-      addButtonLabel="Add Inspection"
-      :addRoute="{name: 'NewInspection'}"
+      addRoute=""
       :links="links"
       >
+      <template #addButton>
+        <v-menu offset-y left rounded="lg"
+      transition="slide-x-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+        <v-btn v-on="on" v-bind="attrs" depressed color="primary" :to="addRoute" small>
+        <v-icon left>mdi-plus </v-icon>
+        Add Inspection
+        </v-btn>
+          </template>
+        <v-list dense>
+          <v-list-item>
+            <v-list-item-title class="small font-weight-bold">Select Form...</v-list-item-title>
+          </v-list-item>
+          <v-divider class="my-1"></v-divider>
+          <v-list-item :disabled="!menu.elements" v-for="menu in allInspectionForms" :key="menu.id" @click="useForm(menu)">
+            <v-list-item-title class="small">
+              <!-- <v-icon  left small>{{ menu.icon }}</v-icon> -->
+                {{ menu.name }}
+            </v-list-item-title>
+            <v-list-item-content>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        </v-menu>
+      </template>
       <template #body>
   <v-data-table
   :loading="loading"
@@ -123,10 +148,11 @@ import users from '../../mixins/user'
 // import VehicleFilterGroup from '../../components/common/VehicleFilterGroup.vue'
 import vehicles from '../../mixins/vehicles'
 import { isAdmin } from '../../services/auth'
+import inspections from '../../mixins/inspections'
 export default {
   components: { ListPageLayout },
   name: 'InspectionList',
-  mixins: [common, users, vehicles],
+  mixins: [common, users, vehicles, inspections],
   data () {
     return {
       defaultImage: require('../../assets/fleet1.jpg'),
@@ -159,6 +185,11 @@ export default {
     }
   },
   computed: {
+    allInspectionForms: {
+      get () {
+        return this.$store.state.inspections.allInspectionForms
+      }
+    },
     inspectionData: {
       get () {
         return this.$store.state.inspections.inspectionData
@@ -176,6 +207,10 @@ export default {
     }
   },
   methods: {
+    useForm (item) {
+      this.$store.commit('inspections/SET_SELECTED_FORM', item)
+      this.$router.push({ name: 'NewInspection' })
+    },
     getFailedData (data) {
       console.log('data', data)
       if (data !== null) {
