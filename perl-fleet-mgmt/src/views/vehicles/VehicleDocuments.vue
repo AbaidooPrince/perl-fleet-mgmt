@@ -133,7 +133,7 @@ export default {
       ],
       actionItems: [
         { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditPersonnel' },
-        { id: 3, name: 'Delete', icon: 'mdi-delete-outline', routeName: 'DeactivatePersonnel' }
+        { id: 3, name: 'Archive', icon: 'mdi-delete-outline', routeName: 'DeactivatePersonnel' }
       ],
       archivedActionItems: [
         { id: 2, name: 'Restore', icon: 'mdi-refresh', routeName: 'EditPersonnel' },
@@ -147,6 +147,7 @@ export default {
       loading: false,
       // eslint-disable-next-line no-undef
       newPhoto: new Form({
+        id: '',
         name: '',
         url: '',
         type: 'photo',
@@ -170,6 +171,10 @@ export default {
         this.editMode = true
         this.newPhoto.fill(item)
         this.dialog = true
+      } else if (action === 'Restore') {
+        this.restoreFile(item)
+      } else if (action === 'Delete') {
+        console.log(item)
       } else {
         this.archiveFile(item)
         // this.deleteItem = item
@@ -180,10 +185,16 @@ export default {
       // this.form.reset()
       this.dialog = false
     },
+    async restoreFile (data) {
+      const response = await this.$store.dispatch('files/restoreFile', data)
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { error: false, message: 'File restored successfully!' })
+      }
+    },
     async archiveFile (data) {
       const response = await this.$store.dispatch('files/archiveFile', data)
       if (response === 'success') {
-        this.$store.dispatch('showSnackBar', { error: false, message: 'Image deleted successfully!' })
+        this.$store.dispatch('showSnackBar', { error: false, message: 'File deleted successfully!' })
       }
     },
     editFile (data) {

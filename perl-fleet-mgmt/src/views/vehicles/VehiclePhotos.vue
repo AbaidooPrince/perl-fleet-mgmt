@@ -28,7 +28,7 @@
                 </AdminSingleCRUDPageLayout>
                 <v-row>
                   <v-col cols="12" md="3" lg="3" sm="12">
-                                        <v-card elevation="0" class="grey lighten-3" outlined height="200">
+                    <v-card elevation="0" class="grey lighten-3" outlined height="200">
                       <v-card-text class="h-100" align="center">
                         <v-btn title="Add new image" block @click="triggerUpload" depressed color="primary" class="mt-12 mr-auto">
                           <v-icon>mdi-plus</v-icon>
@@ -83,7 +83,7 @@
             <div v-else class="pt-2">
               <div class="text-right">
               <v-icon
-              @click="editFile(image)"
+              @click="restoreFile(image)"
               color="white"
               >
                 mdi-refresh-circle
@@ -150,6 +150,7 @@ export default {
       ],
       // eslint-disable-next-line no-undef
       newPhoto: new Form({
+        id: '',
         name: '',
         url: '',
         type: 'photo',
@@ -161,6 +162,12 @@ export default {
     }
   },
   methods: {
+    async restoreFile (data) {
+      const response = await this.$store.dispatch('files/restoreFile', data)
+      if (response === 'success') {
+        this.$store.dispatch('showSnackBar', { error: false, message: 'File restored successfully!' })
+      }
+    },
     switchComponent (name) {
       if (name) {
         this.getAllArchivedDocs()
@@ -175,7 +182,7 @@ export default {
     async archiveFile (data) {
       const response = await this.$store.dispatch('files/archiveFile', data)
       if (response === 'success') {
-        this.$store.dispatch('showSnackBar', { error: false, message: 'Image deleted successfully!' })
+        this.$store.dispatch('showSnackBar', { error: false, message: 'File deleted successfully!' })
       }
     },
     editFile (data) {
