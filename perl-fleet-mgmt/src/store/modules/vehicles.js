@@ -3,7 +3,11 @@ import Api from '../../services/api'
 export default {
   namespaced: true,
   state: {
-    vehiclePagination: {},
+    vehiclePagination: {
+      firstPage: 1,
+      lastPage: 1,
+      currentPage: 1
+    },
     vehicles: [],
     vehicle: {},
     vehicleDetails: {},
@@ -517,7 +521,7 @@ export default {
     },
     async updateVehicleSpecifications ({ commit, rootState }, data) {
       try {
-        const response = await Api().put(`vehicles/vehicle-specs/${rootState.vehicles.vehicle.id}`, data)
+        const response = await Api().put(`vehicles/vehicle-specs/${rootState.vehicles.vehicleDetails.id}`, data)
         if (response.data.message === 'success') {
           commit('EDIT_MODE', true)
           return 'success'

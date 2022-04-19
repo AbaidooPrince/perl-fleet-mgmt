@@ -3,6 +3,10 @@
     <auth-layout class="">
       <template #header>
         <v-img
+        class="mx-auto"
+        width="300"
+        height="100"
+        contain
         position="center center"
         src="../../assets/brand/fleetgh-logo-horizontal.svg"
         >
@@ -98,8 +102,11 @@ export default {
         this.processing = false
       } else if (response === 'success') {
         this.processing = false
+        console.log('now login', isLoggedIn())
         // console.log('userRouteID', user)
-        this.$router.push({ name: 'UserDashboard', params: { userRouteID: this.userRouteID } })
+        setTimeout(() => {
+          this.$router.push({ name: 'UserDashboard', params: { userRouteID: this.userRouteID } })
+        })
       } else if (response.error) {
         this.$store.dispatch('showSnackBar', { error: true, message: `${response.error}` })
         this.processing = false
@@ -121,6 +128,7 @@ export default {
     }
   },
   created () {
+    console.log('logged', isLoggedIn())
   }
 
 }

@@ -2,7 +2,13 @@
   <div>
     <v-container id="printMe"  class="">
       <v-row justify="center">
-        <v-col cols="12" md="8" class="text-right">
+        <v-col cols="12" md="4">
+          <v-btn link :to="{ name: 'InspectionList' }" plain color="primary">
+            <v-icon left>mdi-chevron-left</v-icon>
+            Inspection History
+          </v-btn>
+        </v-col>
+        <v-col cols="12" md="4" class="text-right">
           <v-btn v-print="printObj" depressed color="success">
             <v-icon left>mdi-printer</v-icon>
             Print
@@ -63,7 +69,7 @@
     <th>Country</th>
   </tr> -->
   <tr v-for="(checklist, c) in inspectionData.checkList" :key="c+'_check'">
-    <td>{{ checklist.itemName }}</td>
+    <td>{{ checklist.name }}</td>
     <td>
       <div class="mb-2" :class="checklist.status === true ? 'text-success' : checklist.status === false ? 'text-danger' : ''">
         {{ checklist.status === true ? 'Pass' : checklist.status === false ? 'Fail' : '' }}

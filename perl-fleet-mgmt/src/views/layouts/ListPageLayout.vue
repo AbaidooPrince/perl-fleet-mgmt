@@ -6,7 +6,9 @@
       </v-toolbar-title>
       <!-- <v-toolbar-items> -->
       <v-spacer></v-spacer>
-      <v-btn depressed color="primary" :to="addRoute" small>
+      <slot name="addButton" v-if="!addRoute">
+      </slot>
+      <v-btn v-if="addRoute && addButtonLabel" depressed color="primary" small>
         <v-icon left>mdi-plus </v-icon>
         {{ addButtonLabel ? addButtonLabel : "Add Item" }}
       </v-btn>

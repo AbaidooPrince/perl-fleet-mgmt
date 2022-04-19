@@ -69,7 +69,7 @@ export default {
     return {
       subMenu: [
         { id: 1, name: 'Details', icon: 'mdi-note-text-outline', routeName: 'NewVehicle', editRoute: 'EditVehicleDetails' },
-        { id: 2, name: 'Maintenance', icon: 'mdi-wrench-outline', routeName: 'Maintenance', editRoute: 'EditVehicleMaintenance' },
+        // { id: 2, name: 'Maintenance', icon: 'mdi-wrench-outline', routeName: 'Maintenance', editRoute: 'EditVehicleMaintenance' },
         { id: 3, name: 'Specifications', icon: 'mdi-calendar-text-outline', routeName: 'Specifications', editRoute: 'EditVehicleSpecifications' }
       ],
       processing: false
@@ -172,7 +172,7 @@ export default {
     this.formMode()
   },
   created () {
-    this.$store.dispatch('users/getAllOperators', { page: 1 })
+    // this.$store.dispatch('users/getAllOperators', { page: 1 })
   }
 
 }

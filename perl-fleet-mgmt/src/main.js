@@ -13,6 +13,7 @@ import './style.scss'
 import VehicleItem from './components/common/VehicleItem.vue'
 import UploaderVue from './components/common/Uploader.vue'
 import UserItem from './components/common/UserItem.vue'
+import auth from './services/auth'
 import '@/helpers/filters'
 
 Vue.use(VueTippy, {
@@ -44,5 +45,6 @@ new Vue({
   router,
   store,
   vuetify,
+  auth,
   render: h => h(App)
 }).$mount('#app')

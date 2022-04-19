@@ -5,6 +5,7 @@ import admin from './admin'
 import vehicles from './vehicles'
 import users from './users'
 import inspections from './inspections'
+import store from '../store'
 import { isAdmin, isLoggedIn, isRegular } from '../services/auth'
 
 Vue.use(VueRouter)
@@ -90,8 +91,15 @@ const router = new VueRouter({
 
 // before each router hook
 router.beforeEach((to, from, next) => {
-  console.log(isRegular())
-  if (to.meta.layout && to.meta.layout === 'user' && isLoggedIn()) {
+  if (to.meta.layout && store.state.authentication.currentUser.token === '') {
+    next({
+      name: 'Login',
+      query: { redirect: to.fullPath }
+    })
+    setTimeout(() => {
+      store.dispatch('showSnackBar', { error: true, message: 'Please login to access the platform!' })
+    })
+  } else if (to.meta.layout && to.meta.layout === 'user' && isLoggedIn()) {
     if (isAdmin() || isRegular()) {
       console.log('running')
       next()

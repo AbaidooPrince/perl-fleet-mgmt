@@ -1,7 +1,7 @@
 export default {
   methods: {
     observe (id) {
-      const newId = '#'+id
+      const newId = '#' + id
       console.log(newId)
       const el = document.querySelector(newId)
       const observer = new window.IntersectionObserver(

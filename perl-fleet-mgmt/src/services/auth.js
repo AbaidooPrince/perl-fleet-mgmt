@@ -57,6 +57,7 @@ export function logout () {
 }
 export function clearAuthToken () {
   axios.defaults.headers.common.Authorization = ''
+  Storage.removeItem('vuex')
   return Cookies.remove(AUTH_TOKEN_KEY)
 }
 // set token

@@ -4,7 +4,7 @@
       <div class="">
         <div class="mb-4">
           <small>
-            <router-link to="{name: 'VehicleList'}">
+            <router-link :to="{name: 'VehicleList'}">
               <v-icon size="20" left> mdi-chevron-left
               </v-icon> Vehicle List
             </router-link>
@@ -37,7 +37,7 @@
       <v-row align="center" justify-md="center">
         <v-col cols="12" md="1" class="pt-0 pb-0 align-self-right">
           <v-avatar rounded="lg" size="70">
-            <v-img src="../../assets/fleet1.jpg"></v-img>
+            <v-img :lazy-src="defaultVehicle" :src="vehicle.photo ? vehicle.photo : defaultVehicle"></v-img>
           </v-avatar>
         </v-col>
         <v-col cols="12" md="9" class="pt-0 pb-0">
@@ -45,9 +45,9 @@
           </div>
           <div class="grey--text small">
             <span>{{ getVehicleType(vehicle.vehicleTypeId) }} </span>
-            <span v-if="vehicle.vin">.{{ getVehicleModel(vehicle.vehicleModelId)}}</span>
-            <span v-if="vehicle.vin">. {{ vehicle.vin }}</span>
-            <span v-if="vehicle.licensePlate">. {{ vehicle.licensePlate }}</span>
+            <span v-if="vehicle.vehicleModelId">. {{ getVehicleModel(vehicle.vehicleModelId)}} </span>
+            <span v-if="vehicle.vin">. {{ vehicle.vin }} </span>
+            <span v-if="vehicle.licensePlate">. {{ vehicle.licensePlate }} </span>
           </div>
           <div class="d-flex w-50 text-muted">
             <div class="text-left mr-4">

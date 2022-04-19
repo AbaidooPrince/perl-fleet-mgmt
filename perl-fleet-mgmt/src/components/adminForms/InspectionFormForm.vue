@@ -4,17 +4,18 @@
       <v-row justify="center" align="center">
         <v-col cols="12" md="12" class="pa-0">
           <v-card class="pa-4">
-            <v-card-title class="pt-0">{{ editMode ? 'Edit Role' : 'New Role'}}
+            <v-card-title class="pt-0">{{ editMode ? 'Edit Form' : 'New Form'}}
               <div class="close ml-auto">
                 <slot name="close"/>
               </div>
             </v-card-title>
             <v-divider class="mt-0"></v-divider>
             <v-card-text>
-              <v-form ref="groupForm">
+              <v-form ref="InspectionFormForm">
               <div>
-                <label>Role Name <strong>*</strong></label>
-                <v-text-field :rules="[required('Role Name')]" dense outlined
+                <label>Form Name <strong>*</strong></label>
+                <v-text-field
+                :rules="[required('Form Name')]" dense outlined
                 v-model="form.name"
                 :value="form.id"
                 >
@@ -33,11 +34,11 @@
               </div>
               <v-divider class="mt-0"></v-divider>
               <v-row class="mt-4">
-                <v-col cols="12" md="12" v-for="(item, i) in form.items" :key="i+'item'">
+                <v-col cols="12" md="12" v-for="(item, i) in form.elements" :key="i+'item'">
                   <v-row>
                     <v-col cols="12" md="10" class="pr-0 py-0">
                       <v-text-field
-                      v-model="item.name"
+                      v-model="form.elements[i].name"
                       dense
                       outlined
                       :placeholder="`Item ${i+1} Name`"
@@ -45,14 +46,14 @@
 
                     </v-col>
                     <v-col cols="12" md="1" class="pl-0 py-0">
-                      <v-icon>
+                      <v-icon @click="deleteItem(i)">
                         mdi-delete
                       </v-icon>
                     </v-col>
                   </v-row>
                 </v-col>
               </v-row>
-              <div align="end" class="mt-4">
+              <div align="end" class="mt-4 justify-end">
                 <v-btn @click="addNewItem" depressed small color="success">
                   <v-icon left>mdi-plus</v-icon>
                   New Item
@@ -97,6 +98,9 @@ export default {
   methods: {
     addNewItem () {
       this.$emit('add-new-item')
+    },
+    deleteItem (i) {
+      this.$emit('delete-item', i)
     }
   }
 
