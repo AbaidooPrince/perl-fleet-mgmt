@@ -5,13 +5,13 @@
 </template>
 
 <script>
+import data from '../mixins/data'
 import PageUnderConstruction from './PageUnderConstruction.vue'
 export default {
   components: { PageUnderConstruction },
   name: 'Dashboard',
+  mixins: [data],
   created () {
-    this.$store.dispatch('users/getAllGroups')
-    this.$store.dispatch('vehicles/getAllVehicleStatus')
   }
 
 }

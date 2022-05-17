@@ -6,6 +6,7 @@ import vehicles from './vehicles'
 import users from './users'
 import inspections from './inspections'
 import store from '../store'
+import services from './services'
 import { isAdmin, isLoggedIn, isRegular } from '../services/auth'
 
 Vue.use(VueRouter)
@@ -82,7 +83,7 @@ const index = [
   }
 ]
 
-const routes = index.concat(users, admin, vehicles, inspections)
+const routes = index.concat(users, admin, vehicles, inspections, services)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

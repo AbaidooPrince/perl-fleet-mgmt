@@ -8,7 +8,7 @@
       <v-spacer></v-spacer>
       <slot name="addButton" v-if="!addRoute">
       </slot>
-      <v-btn v-if="addRoute && addButtonLabel" depressed color="primary" small>
+      <v-btn v-if="addRoute && addButtonLabel" :to="addRoute" link depressed color="primary" small>
         <v-icon left>mdi-plus </v-icon>
         {{ addButtonLabel ? addButtonLabel : "Add Item" }}
       </v-btn>
