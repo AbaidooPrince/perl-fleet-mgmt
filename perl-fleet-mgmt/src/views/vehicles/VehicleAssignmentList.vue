@@ -169,6 +169,7 @@ export default {
       assignmentForm: new Form({
         vehicleId: null,
         operatorAccountId: null,
+        taskId: null,
         startDate: null,
         startTime: null,
         startingDate: null,

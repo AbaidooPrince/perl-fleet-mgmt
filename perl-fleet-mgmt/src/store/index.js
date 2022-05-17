@@ -7,6 +7,7 @@ import users from './modules/users'
 import vehicles from './modules/vehicles'
 import inspections from './modules/inspections'
 import files from './modules/files'
+import services from './modules/services'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -90,6 +91,7 @@ export default new Vuex.Store({
     users,
     vehicles,
     inspections,
-    files
+    files,
+    services
   }
 })

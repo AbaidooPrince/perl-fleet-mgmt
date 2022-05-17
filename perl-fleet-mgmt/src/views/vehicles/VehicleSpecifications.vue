@@ -9,7 +9,7 @@
     <wheels-tyres :form="wheelsTiresForms"></wheels-tyres>
     <fuel :form="fuelForm"></fuel>
     <oil :form="oilForm"></oil>
-      <v-row align="center" justify="center">
+      <!-- <v-row align="center" justify="center">
         <v-col order-sm="2" cols="12" md="3" sm="3">
           <v-btn plain color="primary">Cancel
           </v-btn>
@@ -22,7 +22,7 @@
           </v-btn>
           </div>
         </v-col>
-      </v-row>
+      </v-row> -->
   </div>
 </template>
 

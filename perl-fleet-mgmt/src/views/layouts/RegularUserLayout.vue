@@ -249,12 +249,12 @@
           <v-icon class="pa-2" color="grey lighten-3">mdi-wrench</v-icon>
           <v-list-item-title>Service</v-list-item-title>
         </template>
-            <v-list-item link>
+            <v-list-item exact active-class="menu-active-class" link :to="{name: 'ServiceList'}">
               <v-list-item-icon>
               </v-list-item-icon>
               <v-list-item-content>
           <v-list-item-subtitle>
-            Inspection History
+            Service History
           </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>

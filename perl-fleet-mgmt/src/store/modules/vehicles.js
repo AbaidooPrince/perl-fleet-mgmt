@@ -23,7 +23,9 @@ export default {
     allVehicleAssignments: [],
     assignmentsPagination: {},
     allInspections: [],
-    inspectionPagination: {}
+    inspectionPagination: {},
+    allVehicleMakes: [],
+    makesPagination: {}
   },
   mutations: {
     SET_VEHICLES_PAGINATION (state, data) {
@@ -87,6 +89,12 @@ export default {
     },
     SET_TYPES_PAGINATION (state, data) {
       state.typesPagination = data
+    },
+    SET_ALL_VEHICLE_MAKES (state, data) {
+      state.allVehicleMakes = data
+    },
+    SET_MAKES_PAGINATION (state, data) {
+      state.makesPagination = data
     }
   },
   getters: {
@@ -179,6 +187,45 @@ export default {
         const response = await Api().get('/vehicles/statuses')
         if (response.data.message === 'success') {
           commit('SET_ALL_VEHICLE_STATUS', response.data.status)
+          return 'success'
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    // vehicle make actions
+    async searchMake ({ dispatch }, data) {
+      try {
+        const response = await Api().post('/vehicles/search-vehicle-make', data)
+        if (response.data.message === 'success') {
+          dispatch('getVehicleMakes', { page: 1 })
+          return response.data.makes.data
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async addVehicleMake ({ dispatch }, data) {
+      try {
+        const response = await Api().post('/vehicles/vehicle-make', data)
+        if (response.data.message === 'success') {
+          dispatch('getVehicleMakes', { page: 1 })
+          return response.data.type[0]
+        }
+      } catch (e) {
+        return e.response.data
+      }
+    },
+    async getVehicleMakes ({ commit }, data) {
+      try {
+        const response = await Api().get(`/vehicles/vehicle-makes/${data.page}`)
+        if (response.data.message === 'success') {
+          commit('SET_ALL_VEHICLE_MAKES', response.data.makes.data)
+          commit('SET_MAKES_PAGINATION', {
+            firstPage: response.data.makes.firstPage,
+            lastPage: response.data.makes.lastPage,
+            currentPage: response.data.makes.currentPage
+          })
           return 'success'
         }
       } catch (e) {
@@ -436,7 +483,7 @@ export default {
     },
     async getAllUnassignedVehicles ({ commit }, data) {
       try {
-        const response = await Api().get(`/vehicles/vehicles/${data.page}`)
+        const response = await Api().get(`/vehicles/unassign-vehicles/${data.page}`)
         if (response.data.message === 'success') {
           commit('SET_VEHICLES', response.data.vehicles.data)
           commit('SET_VEHICLES_PAGINATION', {
@@ -452,7 +499,7 @@ export default {
     },
     async getAllAssignedVehicles ({ commit }, data) {
       try {
-        const response = await Api().get(`/vehicles/vehicles/${data.page}`)
+        const response = await Api().get(`/vehicles/assign-vehicles/${data.page}`)
         if (response.data.message === 'success') {
           commit('SET_VEHICLES', response.data.vehicles.data)
           commit('SET_VEHICLES_PAGINATION', {

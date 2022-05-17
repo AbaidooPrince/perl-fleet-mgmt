@@ -2,7 +2,7 @@
   <v-app>
     <regular-user-layout v-if="this.$route.meta.layout === 'user'"></regular-user-layout>
     <admin-user-layout v-else-if="this.$route.meta.layout === 'admin'"></admin-user-layout>
-    <v-main :class="this.$route.meta.layout !== 'admin' ? 'bg-white' : ''" class="w-100 fullwidth">
+    <v-main :class="this.$route.meta.layout !== 'admin' ? 'main-background' : ''" class="w-100 fullwidth">
       <v-container class="mx-0 container fullwidth">
       <router-view/>
       </v-container>

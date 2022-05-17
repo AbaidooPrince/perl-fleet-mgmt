@@ -4,18 +4,18 @@
       <v-row justify="center" align="center">
         <v-col cols="12" md="12" class="pa-0">
           <v-card class="pa-4">
-            <v-card-title class="pt-0">New Service Task
+            <v-card-title class="pt-0">New Task
               <div class="close ml-auto">
                 <slot name="close"/>
               </div>
             </v-card-title>
             <v-divider class="mt-0"></v-divider>
             <v-card-text>
-              <v-form ref="serviceTaskForm">
+              <v-form ref="groupForm">
               <div>
-                <label>Service Task Name <strong>*</strong></label>
-                <v-text-field :rules="[required('Service Task Name')]" dense outlined
-                v-model="form.serviceTaskName"
+                <label>Task Name <strong>*</strong></label>
+                <v-text-field :rules="[required('Task Name')]" dense outlined
+                v-model="form.taskName"
                 :value="form.id"
                 >
                 </v-text-field>

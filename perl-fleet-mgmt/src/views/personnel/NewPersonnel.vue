@@ -22,7 +22,7 @@
       </v-form>
     </template>
     <template #actions>
-      <v-container>
+      <!-- <v-container>
       <v-row align="center" justify="center">
         <v-col order-sm="2" cols="12" md="3" sm="3">
           <v-btn plain color="primary">Cancel
@@ -37,7 +37,7 @@
           </div>
         </v-col>
       </v-row>
-      </v-container>
+      </v-container> -->
     </template>
     <!-- </v-container> -->
     </new-item-page-layout>

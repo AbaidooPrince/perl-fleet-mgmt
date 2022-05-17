@@ -117,6 +117,18 @@
                     </template>
                   </v-autocomplete>
                 </div>
+                <div>
+              <label>Task</label>
+              <v-select
+              v-model="form.taskId"
+              :items="groups"
+              item-text="name"
+              item-value="id"
+              dense
+              outlined
+              >
+              </v-select>
+                </div>
                 <v-divider class="mt-0"></v-divider>
                 <label>Start Date/Time</label>
                 <div class="d-flex justify-content-between">

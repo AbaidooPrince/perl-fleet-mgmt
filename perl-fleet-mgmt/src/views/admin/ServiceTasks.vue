@@ -67,8 +67,8 @@
       <v-dialog v-model="formDialog"
       width="700"
       >
-      <v-form ref="roleForm">
-        <role-form :editMode="editMode" :form="roleForm">
+      <v-form ref="taskForm">
+        <service-task-form :editMode="editMode" :form="taskForm">
           <template #close>
             <v-btn @click="closeDialog" color="dark" icon>
               <v-icon>mdi-close</v-icon>
@@ -86,7 +86,7 @@
               </div>
             </div>
           </template>
-        </role-form>
+        </service-task-form>
       </v-form>
       </v-dialog>
 
@@ -95,7 +95,7 @@
 
 <script>
 
-import RoleForm from '../../components/adminForms/RoleForm.vue'
+import ServiceTaskForm from '../../components/adminForms/ServiceTaskForm.vue'
 import CustomPagination from '../../components/common/CustomPagination.vue'
 import validation from '../../services/validation'
 import AdminSingleCRUDPageLayout from '../layouts/AdminSingleCRUDPageLayout.vue'
@@ -104,54 +104,15 @@ import AdminSingleCRUDPageLayout from '../layouts/AdminSingleCRUDPageLayout.vue'
 export default {
   name: 'ServiceTasks',
   // mixins: [roles],
-  components: { AdminSingleCRUDPageLayout, CustomPagination, RoleForm },
+  components: { AdminSingleCRUDPageLayout, CustomPagination, ServiceTaskForm },
   data () {
     return {
       editMode: false,
       ...validation,
       formDialog: false,
       // eslint-disable-next-line no-undef
-      roleForm: new Form({
-        name: 'Fleet Manager',
-        description: '',
-        id: '',
-        permissions: [
-          {
-            name: 'Vehicle Entries',
-            read: true,
-            update: true,
-            delete: true,
-            create: true
-          },
-          {
-            name: 'Vehicle Assignment Entries',
-            read: true,
-            update: true,
-            delete: true,
-            create: true
-          },
-          {
-            name: 'Inspection Submissions',
-            read: true,
-            update: false,
-            delete: true,
-            create: true
-          },
-          {
-            name: 'Personnel Entries',
-            read: true,
-            update: true,
-            delete: true,
-            create: true
-          },
-          {
-            name: 'Fuel Entries',
-            read: true,
-            update: true,
-            delete: true,
-            create: true
-          }
-        ]
+      taskForm: new Form({
+        taskName: ''
       }),
       singleSelect: false,
       loading: false,
@@ -177,7 +138,7 @@ export default {
   },
   methods: {
     saveOption () {
-      if (!this.$refs.roleForm.validate()) return
+      if (!this.$refs.taskForm.validate()) return
       if (this.editMode) {
         this.updateRole()
       } else {
@@ -191,7 +152,7 @@ export default {
           ...item,
           roleName: item.name
         }
-        this.roleForm.fill(data)
+        this.taskForm.fill(data)
         this.formDialog = true
       } else {
         this.deleteRole(item)
@@ -200,12 +161,12 @@ export default {
       }
     },
     closeDialog () {
-      this.$refs.roleForm.reset()
+      this.$refs.taskForm.reset()
       this.formDialog = false
     },
     openForm () {
       this.formDialog = true
-      this.$refs.roleForm.reset()
+      this.$refs.taskForm.reset()
     },
     async deleteRole (data) {
       const response = this.$store.dispatch('users/deleteRole', data)
@@ -215,7 +176,7 @@ export default {
     },
     async updateRole () {
       try {
-        const response = await this.$store.dispatch('users/updateRole', this.roleForm)
+        const response = await this.$store.dispatch('users/updateRole', this.taskForm)
         if (response === 'success') {
           this.$store.dispatch('showSnackBar', { message: 'Role updated successfully!', error: false })
           this.formDialog = false
@@ -226,7 +187,7 @@ export default {
     },
     async addRole () {
       try {
-        const response = await this.$store.dispatch('users/addRole', this.roleForm)
+        const response = await this.$store.dispatch('users/addRole', this.taskForm)
         if (response === 'success') {
           this.$store.dispatch('showSnackBar', { message: 'Role added successfully!', error: false })
           this.formDialog = false
