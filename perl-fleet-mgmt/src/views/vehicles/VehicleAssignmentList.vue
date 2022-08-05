@@ -169,7 +169,7 @@ export default {
       assignmentForm: new Form({
         vehicleId: null,
         operatorAccountId: null,
-        taskId: null,
+        assignmentTask: '',
         startDate: null,
         startTime: null,
         startingDate: null,
@@ -187,8 +187,7 @@ export default {
       ],
       actionItems: [
         { id: 1, name: 'View', icon: 'mdi-arrow-right', routeName: 'ViewVehicle' },
-        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' },
-        { id: 3, name: 'Deactivate User Access', icon: 'mdi-account-minus-outline', routeName: 'DeactivateVehicle' }
+        { id: 2, name: 'Edit', icon: 'mdi-pencil-outline', routeName: 'EditVehicle' }
       ],
       selected: [],
       headers: [
@@ -203,7 +202,7 @@ export default {
         { text: 'Assignee', value: 'operatorAccountId', width: 200 },
         { text: 'Sart Date', value: 'startDate', width: 170 },
         { text: 'End Date', value: 'endDate', width: 170 },
-        { text: 'Task', value: '', width: 170 },
+        { text: 'Task', value: 'assignmentTask', width: 170 },
         { text: 'Comment', value: 'comment' },
         { text: '', value: 'id' }
       ],

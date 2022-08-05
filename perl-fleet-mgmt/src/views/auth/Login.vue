@@ -56,6 +56,7 @@
           </v-card-text>
           <v-card-actions class="mb-3">
             <v-btn
+            :disabled="processing"
             @click="login"
             block
             color="success"

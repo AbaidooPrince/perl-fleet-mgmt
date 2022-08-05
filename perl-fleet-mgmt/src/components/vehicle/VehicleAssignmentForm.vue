@@ -118,8 +118,13 @@
                   </v-autocomplete>
                 </div>
                 <div>
-              <label>Task</label>
-              <v-select
+              <label>Assignment Task</label>
+              <v-text-field
+              v-model="form.assignmentTask"
+              dense
+              outlined
+              ></v-text-field>
+              <!-- <v-select
               v-model="form.taskId"
               :items="groups"
               item-text="name"
@@ -127,7 +132,7 @@
               dense
               outlined
               >
-              </v-select>
+              </v-select> -->
                 </div>
                 <v-divider class="mt-0"></v-divider>
                 <label>Start Date/Time</label>

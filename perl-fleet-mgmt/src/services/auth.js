@@ -63,5 +63,5 @@ export function clearAuthToken () {
 // set token
 export function setAuthToken (token) {
   // sessionStorage.setItem(AUTH_TOKEN_KEY, token)
-  Cookies.set(AUTH_TOKEN_KEY, token)
+  Cookies.set(f, token)
 }
